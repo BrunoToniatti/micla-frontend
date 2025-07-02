@@ -1,0 +1,23 @@
+<div class="activation-form">
+  <div class="card">
+    <h1>Bem-vindo ao sistema!</h1>
+    <p>Complete seu cadastro para ativar seu acesso.</p>
+
+    <label>Nome</label>
+    <input type="text" [(ngModel)]="user.firstName" placeholder="Digite seu nome" />
+
+    <label>Sobrenome</label>
+    <input type="text" [(ngModel)]="user.lastName" placeholder="Digite seu sobrenome" />
+
+    <label>Crie sua senha</label>
+    <input type="password" [(ngModel)]="user.password" (input)="checkPassword()" placeholder="Ex: MinhaSenha@123" />
+
+    <ul class="password-check">
+      <li [class.valid]="rules.upper">Letra maiúscula</li>
+      <li [class.valid]="rules.special">Caractere especial (&#64; # $ ...)</li>
+      <li [class.valid]="rules.number">Número</li>
+    </ul>
+
+    <button (click)="submit()">Começar</button>
+  </div>
+</div>

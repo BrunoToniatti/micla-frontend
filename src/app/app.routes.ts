@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { LayoutComponent } from './layout/layout.component';
 import { UsersComponent } from './pages/users/users.component';
+import { UserFormComponent } from './pages/user-form/user-form.component';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,11 @@ export const routes: Routes = [
           import('./pages/users/users.component').then(u => UsersComponent)
       }
     ]
+  },
+  {
+    path: 'ativar-conta',
+    component: UserFormComponent
+
   },
   {
     path: '**',

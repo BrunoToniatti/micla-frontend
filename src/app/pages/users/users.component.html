@@ -10,7 +10,7 @@
 
     <label>Cargo</label>
     <select [(ngModel)]="newUser.role">
-      <option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo }}</option>
+      <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
     </select>
 
     <button (click)="addUser()">Salvar</button>

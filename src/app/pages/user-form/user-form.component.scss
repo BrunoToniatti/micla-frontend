@@ -1,0 +1,95 @@
+.activation-form {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1b1f27, #0d1117);
+  padding: 20px;
+  animation: fadeIn 0.6s ease-out;
+
+  .card {
+    background: #1b1f27;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(255, 0, 64, 0.2);
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    color: white;
+    animation: slideUp 0.5s ease-out;
+
+    h1 {
+      color: #ff0040;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #ccc;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      color: #ff0040;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: #0d1117;
+      border: 1px solid #2e2e2e;
+      color: white;
+      margin-top: 5px;
+
+      &:focus {
+        border-color: #ff0040;
+        outline: none;
+        box-shadow: 0 0 6px #ff0040;
+      }
+    }
+
+    .password-check {
+      list-style: none;
+      margin: 15px 0;
+      padding: 0;
+      font-size: 13px;
+
+      li {
+        color: #bbb;
+
+        &.valid {
+          color: #00ff99;
+        }
+      }
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #ff0040;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #e60039;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}

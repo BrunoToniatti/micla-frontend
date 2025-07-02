@@ -2,6 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
+export interface User{
+  first_name: string;
+  last_name: string;
+  password: string;
+  token: string;
+}
+
+export interface Invite{
+  email: string,
+  role: number
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +25,13 @@ export class UsersService {
 
   apiUrl = environment.apiUrl + 'accounts/users/';
 
+  inviteUrl = environment.apiUrl + 'accounts/invites/'
+
   getUsers() {
     return this.http.get(`${this.apiUrl}`)
+  }
+
+  createInvite(invite: Invite){
+    return this.http.post(`${this.inviteUrl}`, invite);
   }
 }

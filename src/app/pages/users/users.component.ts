@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { UsersService } from '../../services/users.service';
+import { Invite, UsersService } from '../../services/users.service';
 import { FormsModule } from '@angular/forms';
+import { RoleService } from '../../services/role.service';
 
 @Component({
   selector: 'app-users',
@@ -15,22 +16,24 @@ import { FormsModule } from '@angular/forms';
 })
 export class UsersComponent {
 
-  cargos = ['Administrador', 'Colaborador', 'Supervisor'];
+  roles: any = [];
 
   showForm = false;
   users: any = []
 
   newUser = {
     email: '',
-    role: '',
+    role: 0,
   }
 
   constructor(
-    private userService: UsersService
+    private userService: UsersService,
+    private roleService: RoleService
   ){}
 
   ngOnInit(): void{
     this.listUsers()
+    this.listRoles()
   }
 
   toggleForm(){
@@ -38,7 +41,16 @@ export class UsersComponent {
   }
 
   addUser(){
+    const payload: Invite = {
+      email: this.newUser.email,
+      role: this.newUser.role
+    }
 
+    this.userService.createInvite(payload).subscribe({
+      next: (res) => {
+        console.log('Foi')
+      }
+    })
   }
 
   listUsers(){
@@ -46,7 +58,14 @@ export class UsersComponent {
       next: (users) => {
         // Se conseguir listar os usuários
         this.users = users
-        console.log(users)
+      }
+    })
+  }
+
+  listRoles(){
+    this.roleService.getRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles
       }
     })
   }
