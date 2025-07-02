@@ -1,20 +1,39 @@
-<div class="users-table">
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Nome de usuário</th>
-        <th>Email</th>
-        <th>Cargo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.first_name }} {{ user.last_name }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.profile.role.name }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="users-wrapper">
+
+  <div class="btnNew">
+    <button (click)="toggleForm()">Adicionar usuário</button>
+  </div>
+
+  <div class="form" *ngIf="showForm">
+    <label>Email</label>
+    <input type="email" [(ngModel)]="newUser.email" />
+
+    <label>Cargo</label>
+    <select [(ngModel)]="newUser.role">
+      <option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo }}</option>
+    </select>
+
+    <button (click)="addUser()">Salvar</button>
+  </div>
+
+  <div class="users-table" *ngIf="!showForm">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Nome de usuário</th>
+          <th>Email</th>
+          <th>Cargo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.profile.role.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

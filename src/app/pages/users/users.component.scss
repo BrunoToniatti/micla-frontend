@@ -69,3 +69,128 @@
     }
   }
 }
+
+.btnNew {
+  text-align: right;
+  margin-bottom: 25px;
+  animation: fadeSlide 0.5s ease forwards;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #2a2f3a;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: #2e2e2e;
+      color: #ff0040;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    text-align: center;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+.form {
+  background-color: #1b1f27;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 0, 64, 0.15);
+  color: white;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeSlide 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(-10px);
+
+  &.ng-animating,
+  &.ng-trigger {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  label {
+    color: #ff0040;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  input,
+  select {
+    padding: 12px;
+    background-color: #0d1117;
+    border: 1px solid #2e2e2e;
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+
+    &:focus {
+      border-color: #ff0040;
+      outline: none;
+      box-shadow: 0 0 6px #ff0040;
+    }
+  }
+
+  button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #2a2f3a;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #2e2e2e;
+      color: #ff0040;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+
+    input, select {
+      font-size: 13px;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
