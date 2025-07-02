@@ -22,8 +22,11 @@ export class RoleService {
   url = ''
 
   newRole(role: Role){
-    console.log('esta vindo aqui')
     return this.http.post(`${this.apiUrl}accounts/roles/`, role)
+  }
+
+  updateRole(id: number, role: Role){
+    return this.http.put(`${this.apiUrl}accounts/roles/${id}/`, role)
   }
 
   getRoles(){
