@@ -1,0 +1,134 @@
+@keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:host {
+  overflow: hidden;
+  display: block;
+  height: 100vh;
+  background: #0e1a24; // fundo escuro tech
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  animation: fadeInSlide 0.9s ease-out;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(160, 14, 50, 0.3);
+  text-align: center;
+}
+
+.title {
+  font-size: 2.8rem;
+  color: #a00e32; // vinho micla
+  font-weight: 900;
+  margin-bottom: 0.2rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #ccc;
+  letter-spacing: 1px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  label {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    color: #ccc;
+  }
+
+  input {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+
+    &::placeholder {
+      color: #aaa;
+    }
+
+    &:focus {
+      outline: 2px solid #a00e32;
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.btn-login {
+  background-color: #a00e32;
+  color: #fff;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+
+  &:hover {
+    background-color: #c2184f;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.signup-text {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+
+  a {
+    color: #a00e32;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: 2rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+}

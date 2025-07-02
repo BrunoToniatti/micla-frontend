@@ -1,0 +1,56 @@
+<div class="roles-table">
+  <div class="message">
+    <div class="text" [class.visible]="message">
+      <mat-icon>check</mat-icon>
+      <span>{{ message }}</span>
+    </div>
+  </div>
+  <div class="btnNew">
+    <button  (click)="showForm = !showForm">
+      <mat-icon>@if(!showForm){add}@else{list}</mat-icon>
+      @if(!showForm){Novo Cargo}@else{Listar Cargos}
+    </button>
+  </div>
+  <!-- Form de cargo -->
+  <div class="form" *ngIf="showForm">
+
+      <label>Nome do cargo</label>
+      <input matInput [(ngModel)]="newRole.name" />
+
+      <label>Descrição do cargo</label>
+      <input matInput [(ngModel)]="newRole.description" />
+
+      <button (click)="save()">Adicionar cargo</button>
+  </div>
+  <!-- Tabela de cargos -->
+  <table *ngIf="!showForm">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of roles">
+        <td>{{ role.name }}</td>
+        <td>{{ role.description }}</td>
+        <td> <button class="Btn edit">Editar
+            <svg class="svg" viewBox="0 0 512 512">
+              <path
+                d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+              </path>
+            </svg>
+          </button>
+        </td>
+        <td> <button class="Btn delete" (click)="deleteRole(role.id)">Excluir
+            <svg xmlns="http://www.w3.org/2000/svg" class="svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
+              <path
+                d="M9 3V4H4V6H5V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V6H20V4H15V3H9ZM7 6H17V20H7V6ZM9 8V18H11V8H9ZM13 8V18H15V8H13Z" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

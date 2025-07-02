@@ -1,0 +1,58 @@
+.layout-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 220px;
+  background: #1b1f27;
+  color: #fff;
+  padding: 1rem;
+
+  .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ff0040;
+    margin-bottom: 2rem;
+  }
+
+  .menu a {
+    display: block;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s;
+
+    &.active,
+    &:hover {
+      color: #a00e32;
+    }
+  }
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .toolbar {
+    background: #0d1117;
+    color: white;
+
+    .menu-button {
+      margin-right: 1rem;
+    }
+
+    .toolbar-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  .content {
+    flex: 1;
+    padding: 1.5rem;
+    background: #111;
+    color: white;
+  }
+}
