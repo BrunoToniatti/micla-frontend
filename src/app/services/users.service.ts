@@ -43,4 +43,8 @@ export class UsersService {
     return this.http.post(`${this.inviteUrl}`, invite);
   }
 
+  deleteInvite(id: number){
+    return this.http.delete(`${this.inviteUrl}${id}/`);
+  }
+
 }

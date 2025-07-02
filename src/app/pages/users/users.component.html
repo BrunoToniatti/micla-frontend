@@ -40,7 +40,7 @@
             <td>{{ invite.email }}</td>
             <td>{{ invite.created_at | date:'dd/MM/yyyy HH:mm':'UTC' }}</td>
             <td>
-              <button class="delete-btn">
+              <button class="delete-btn" (click)="deleteInvite(invite.id)">
                 <mat-icon>delete</mat-icon>
                 Excluir
               </button>

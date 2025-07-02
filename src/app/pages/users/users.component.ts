@@ -33,19 +33,19 @@ export class UsersComponent {
   constructor(
     private userService: UsersService,
     private roleService: RoleService
-  ){}
+  ) { }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.listUsers()
     this.listRoles()
     this.listInvites()
   }
 
-  toggleForm(){
+  toggleForm() {
     this.showForm = !this.showForm
   }
 
-  addUser(){
+  addUser() {
     const payload: Invite = {
       email: this.newUser.email,
       role: this.newUser.role
@@ -62,7 +62,7 @@ export class UsersComponent {
     })
   }
 
-  listUsers(){
+  listUsers() {
     this.userService.getUsers().subscribe({
       next: (users) => {
         // Se conseguir listar os usuários
@@ -71,7 +71,7 @@ export class UsersComponent {
     })
   }
 
-  listRoles(){
+  listRoles() {
     this.roleService.getRoles().subscribe({
       next: (roles) => {
         this.roles = roles
@@ -79,10 +79,23 @@ export class UsersComponent {
     })
   }
 
-  listInvites(){
+  listInvites() {
     this.userService.getInvites().subscribe({
-      next: (invites) =>{
+      next: (invites) => {
         this.invites = invites
+        console.log(invites)
+      }
+    })
+  }
+
+  deleteInvite(id: number) {
+    this.userService.deleteInvite(id).subscribe({
+      next: (res) => {
+        this.message = 'Convite excluido com sucesso';
+        setTimeout(() => {
+          this.message = '';
+        }, 4000);
+        this.listInvites();
       }
     })
   }
