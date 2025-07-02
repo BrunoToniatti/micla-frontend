@@ -32,12 +32,15 @@ export class UsersService {
   getUsers() {
     return this.http.get(`${this.apiUrl}`)
   }
+  createUser(user: User){
+    return this.http.post(`${this.activateUrl}`, user)
+  }
 
+  getInvites(){
+    return this.http.get(`${this.inviteUrl}`)
+  }
   createInvite(invite: Invite){
     return this.http.post(`${this.inviteUrl}`, invite);
   }
 
-  createUser(user: User){
-    return this.http.post(`${this.activateUrl}`, user)
-  }
 }
