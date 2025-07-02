@@ -48,6 +48,19 @@ export class RolesComponent {
     });
   };
 
+  toogleForm(){
+    this.showForm = !this.showForm
+    this.resetForm()
+  }
+
+  resetForm(){
+    this.newRole = {
+      id: 0,
+      name: '',
+      description: ''
+    }
+  }
+
   save(id:number = 0) {
     const payload: Role = {
       name: this.newRole.name,

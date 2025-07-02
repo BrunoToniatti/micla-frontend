@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="btnNew">
-    <button (click)="showForm = !showForm">
+    <button (click)="toogleForm()">
       <mat-icon>@if(!showForm){add}@else{list}</mat-icon>
       @if(!showForm){Novo Cargo}@else{Listar Cargos}
     </button>
