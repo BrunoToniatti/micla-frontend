@@ -1,10 +1,18 @@
 <mat-sidenav-container class="layout-container">
-  <mat-sidenav #drawer opened class="sidenav" mode="over" [opened]="false">
+  <mat-sidenav #drawer class="sidenav" mode="over" [opened]="false">
     <div class="logo">MICLA</div>
     <nav class="menu">
-      <a mat-list-item routerLink="/painel" routerLinkActive="active">Painel</a>
-      <a mat-list-item routerLink="/roles" routerLinkActive="active">Cargos</a>
-      <a mat-list-item routerLink="/users" routerLinkActive="active">Usuários</a>
+      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/painel" routerLinkActive="active">
+        Painel
+      </a>
+
+      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/roles" routerLinkActive="active">
+        Cargos
+      </a>
+
+      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/users" routerLinkActive="active">
+        Usuários
+      </a>
     </nav>
   </mat-sidenav>
 

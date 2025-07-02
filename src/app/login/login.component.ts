@@ -41,6 +41,12 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem('access_token', res.access);
         localStorage.setItem('refresh_token', res.refresh);
+
+        if (res.user) {
+          localStorage.setItem('user', JSON.stringify(res.user));
+          this.authService.loadPermissionsOnStartup();
+        }
+
         this.router.navigate(['/painel']);
       },
       error: () => {
