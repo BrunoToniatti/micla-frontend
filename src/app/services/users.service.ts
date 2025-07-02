@@ -11,7 +11,7 @@ export class UsersService {
     private http: HttpClient
   ) { }
 
-  apiUrl = environment.apiUrl + 'accounts/user/';
+  apiUrl = environment.apiUrl + 'accounts/users/';
 
   getUsers() {
     return this.http.get(`${this.apiUrl}`)

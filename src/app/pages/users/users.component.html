@@ -3,15 +3,17 @@
     <thead>
       <tr>
         <th>Nome</th>
+        <th>Nome de usuário</th>
         <th>Email</th>
         <th>Cargo</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
-        <td>{{ user.name }}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
-        <td>{{ user.role }}</td>
+        <td>{{ user.profile.role.name }}</td>
       </tr>
     </tbody>
   </table>

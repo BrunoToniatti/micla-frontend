@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-users',
@@ -11,9 +12,24 @@ import { Component } from '@angular/core';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
-users = [
-    { name: 'João Silva', email: 'joao@email.com', role: 'Administrador' },
-    { name: 'Ana Costa', email: 'ana@email.com', role: 'Colaborador' },
-    { name: 'Carlos Lima', email: 'carlos@email.com', role: 'Supervisor' }
-  ];
+
+  users: any = []
+
+  constructor(
+    private userService: UsersService
+  ){}
+
+  ngOnInit(): void{
+    this.listUsers()
+  }
+
+  listUsers(){
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        // Se conseguir listar os usuários
+        this.users = users
+        console.log(users)
+      }
+    })
+  }
 }
