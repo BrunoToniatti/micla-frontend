@@ -3,8 +3,8 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { User } from '../../services/users.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User, UsersService } from '../../services/users.service';
 
 @Component({
   standalone: true,
@@ -33,9 +33,17 @@ export class UserFormComponent {
     number: false
   };
 
+  message: string = ''
+
   token: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  loading = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UsersService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -53,12 +61,27 @@ export class UserFormComponent {
 
   submit() {
     if (this.rules.upper && this.rules.special && this.rules.number) {
+      this.loading = true;
+
       const payload: User = {
         first_name: this.user.firstName,
         last_name: this.user.lastName,
         password: this.user.password,
         token: this.token
-      }
+      };
+
+      this.userService.createUser(payload).subscribe({
+        next: (res) => {
+          this.message = 'Cadastro com sucesso! Redirecionando...';
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 3000);
+        },
+        error: () => {
+          this.loading = false;
+          alert('Erro ao cadastrar. Tente novamente.');
+        }
+      });
     } else {
       alert("A senha não atende aos critérios.");
     }

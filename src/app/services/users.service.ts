@@ -25,7 +25,9 @@ export class UsersService {
 
   apiUrl = environment.apiUrl + 'accounts/users/';
 
-  inviteUrl = environment.apiUrl + 'accounts/invites/'
+  inviteUrl = environment.apiUrl + 'accounts/invites/';
+
+  activateUrl = environment.apiUrl + 'accounts/activate/';
 
   getUsers() {
     return this.http.get(`${this.apiUrl}`)
@@ -33,5 +35,9 @@ export class UsersService {
 
   createInvite(invite: Invite){
     return this.http.post(`${this.inviteUrl}`, invite);
+  }
+
+  createUser(user: User){
+    return this.http.post(`${this.activateUrl}`, user)
   }
 }

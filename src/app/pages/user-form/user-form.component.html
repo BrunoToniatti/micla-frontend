@@ -18,6 +18,9 @@
       <li [class.valid]="rules.number">Número</li>
     </ul>
 
-    <button (click)="submit()">Começar</button>
+    <button [disabled]="loading" (click)="submit()">
+      <span *ngIf="!loading">Começar</span>
+      <span *ngIf="loading" class="loader"></span>
+    </button>
   </div>
 </div>
