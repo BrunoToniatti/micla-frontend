@@ -83,7 +83,6 @@ export class UsersComponent {
     this.userService.getInvites().subscribe({
       next: (invites) => {
         this.invites = invites
-        console.log(invites)
       }
     })
   }
