@@ -1,31 +1,38 @@
+@use '../../styles/variables' as *;
+
 .layout-container {
   height: 100vh;
 }
 
 .sidenav {
   width: 220px;
-  background: #1b1f27;
-  color: #fff;
+  background: $white;
+  color: $text-color;
   padding: 1rem;
+  box-shadow: 5px 5px 5px rgba(5, 5, 5, 0.5);
 
   .logo {
     font-size: 1.6rem;
     font-weight: bold;
-    color: #ff0040;
+    color: $text-color;
     margin-bottom: 2rem;
   }
 
   .menu a {
+    padding: 9px;
+    border: none;
+    border-radius: 5px;
     display: block;
     margin-bottom: 1rem;
-    color: #fff;
+    color: $text-color;
     text-decoration: none;
     font-weight: 500;
     transition: 0.2s;
 
     &.active,
     &:hover {
-      color: #a00e32;
+      background-color: $text-color;
+      color: $white;
     }
   }
 }
@@ -36,8 +43,11 @@
   height: 100%;
 
   .toolbar {
-    background: #0d1117;
-    color: white;
+    background: $white;
+    color: $text-color;
+    box-shadow: 0px 3px 8px rgba(5, 5, 5, 0.5);
+    z-index: 10;
+    position: relative; // necessário para o z-index funcionar
 
     .menu-button {
       margin-right: 1rem;
@@ -52,7 +62,7 @@
   .content {
     flex: 1;
     padding: 1.5rem;
-    background: #111;
-    color: white;
+    background: $second-white;
+    color: $text-color;
   }
 }

@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { PermissionService } from '../services/permission.service';
 import { CommonModule } from '@angular/common';
+import {MatListModule} from '@angular/material/list';
 
 
 @Component({
@@ -20,7 +21,8 @@ import { CommonModule } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     RouterModule,
-    CommonModule
+    CommonModule,
+    MatListModule
   ],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
