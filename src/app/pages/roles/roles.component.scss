@@ -125,19 +125,18 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #1b1f27;
-    color: white;
+    background-color: $white;
+    color: $text-color;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(255, 0, 64, 0.1);
 
     thead {
-      background-color: #0d1117;
+      background-color: $text-color;
 
       th {
         padding: 1rem;
         text-align: left;
-        color: #ff0040;
+        color: $white;
         font-weight: bold;
         font-size: 14px;
         text-transform: uppercase;
@@ -150,12 +149,12 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #2a2f3a;
+          background-color: $hover-white;
         }
 
         td {
           padding: 1rem;
-          border-top: 1px solid #2e2e2e;
+          border-top: 1px solid $hover-white;
           font-size: 15px;
 
           /* From Uiverse.io by vinodjangid07 */
