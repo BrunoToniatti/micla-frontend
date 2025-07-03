@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 @keyframes fadeInSlide {
   0% {
     opacity: 0;
@@ -13,8 +15,8 @@
   overflow: hidden;
   display: block;
   height: 100vh;
-  background: #0e1a24; // fundo escuro tech
-  color: #fff;
+  background: $white; // fundo escuro tech
+  color: $text-color;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -27,8 +29,6 @@
 }
 
 .login-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   border-radius: 12px;
   padding: 3rem;
@@ -40,7 +40,7 @@
 
 .title {
   font-size: 2.8rem;
-  color: #a00e32; // vinho micla
+  color: $text-color; // vinho micla
   font-weight: 900;
   margin-bottom: 0.2rem;
 }
@@ -48,7 +48,7 @@
 .subtitle {
   font-size: 1rem;
   margin-bottom: 2rem;
-  color: #ccc;
+  color: $second-white;
   letter-spacing: 1px;
 }
 
@@ -66,18 +66,19 @@ form {
   label {
     font-size: 0.85rem;
     margin-bottom: 0.4rem;
-    color: #ccc;
+    color: $second-white;
   }
 
   input {
     padding: 0.8rem 1rem;
     border-radius: 8px;
     border: none;
+    border: 1px solid $text-color;
     background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: $text-color;
 
     &::placeholder {
-      color: #aaa;
+      color: $text-color;
     }
 
     &:focus {
