@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { LayoutComponent } from './layout/layout.component';
 import { UsersComponent } from './pages/users/users.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,11 @@ export const routes: Routes = [
         path: 'users',
         loadComponent: () =>
           import('./pages/users/users.component').then(u => UsersComponent)
+      },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./pages/projects/projects.component').then(p => ProjectsComponent)
       }
     ]
   },

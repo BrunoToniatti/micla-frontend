@@ -18,21 +18,37 @@
     margin-bottom: 2rem;
   }
 
-  .menu a {
-    padding: 9px;
-    border: none;
-    border-radius: 5px;
-    display: block;
-    margin-bottom: 1rem;
-    color: $text-color;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.2s;
+  .submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    &.active,
-    &:hover {
-      background-color: $text-color;
-      color: $white;
+    .submenu-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 1rem 0 0.5rem 0;
+      padding-left: 5px;
+      color: $text-color;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    a {
+      margin-left: 10px;
+      padding: 9px;
+      border: none;
+      border-radius: 5px;
+      display: block;
+      margin-bottom: 1rem;
+      color: $text-color;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+
+      &.active,
+      &:hover {
+        background-color: $text-color;
+        color: $white;
+      }
     }
   }
 }

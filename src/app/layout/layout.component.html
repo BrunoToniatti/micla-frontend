@@ -2,27 +2,42 @@
   <mat-sidenav #drawer class="sidenav" mode="over" [opened]="false">
     <div class="logo">MICLA</div>
     <nav class="menu">
-      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/painel" routerLinkActive="active">
+      <!-- <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/painel" routerLinkActive="active">
         Painel
-      </a>
+      </a> -->
+      <div class="submenu" *ngIf="hasPermission('ADMIN')">
+        <span class="submenu-title" >Administrador</span>
+        <div class="itens">
+          <a  mat-list-item routerLink="/roles" routerLinkActive="active">
+            Cargos
+          </a>
+          <a mat-list-item routerLink="/users" routerLinkActive="active">
+            Usuários
+          </a>
+        </div>
+      </div>
 
-      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/roles" routerLinkActive="active">
-        Cargos
-      </a>
-
-      <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/users" routerLinkActive="active">
-        Usuários
-      </a>
+      <div class="submenu">
+        <span class="submenu-title">Serviços</span>
+        <div class="itens">
+          <a mat-list-item routerLink="/projects" routerLinkActive="active">
+            Projetos
+          </a>
+          <a mat-list-item routerLink="/categories" routerLinkActive="active">
+            Categorias
+          </a>
+        </div>
+      </div>
     </nav>
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
-      <mat-toolbar color="primary" class="toolbar">
-        <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span class="toolbar-title">Painel Administrativo</span>
-      </mat-toolbar>
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">Painel Administrativo</span>
+    </mat-toolbar>
 
     <main class="content">
       <router-outlet></router-outlet>
