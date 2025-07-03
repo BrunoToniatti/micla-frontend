@@ -1,6 +1,9 @@
+@use '../../../styles/variables' as *;
+
+
 .activation-form {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1b1f27, #0d1117);
+  background: $second-white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,16 +12,16 @@
   .card {
     width: 100%;
     max-width: 420px;
-    background: rgba(27, 31, 39, 0.8);
+    background: $white;
     padding: 40px 30px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(255, 0, 64, 0.35);
     backdrop-filter: blur(12px);
     animation: cardAppear 0.8s ease-out;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid $text-color;
 
     h1 {
-      color: #ff0040;
+      color: $text-color;
       margin-bottom: 12px;
       font-size: 26px;
       text-align: center;
@@ -27,35 +30,36 @@
 
     p {
       text-align: center;
-      color: #cccccc;
+      color: $second-white;
       margin-bottom: 30px;
       font-size: 15px;
     }
 
     label {
       font-weight: 600;
-      color: #ff5f8f;
+      color: $text-color;
       font-size: 13px;
       margin-bottom: 6px;
       display: block;
     }
 
     input {
-      width: 100%;
+      width: 95%;
       padding: 12px;
       background-color: rgba(255, 255, 255, 0.05);
       border: 1px solid transparent;
       border-radius: 10px;
-      color: white;
+      color: $text-color;
       margin-bottom: 22px;
       transition: all 0.3s ease;
+      border: 1px solid $text-color;
 
       &::placeholder {
-        color: #888;
+        color: $text-color;
       }
 
       &:focus {
-        border-color: #ff5f8f;
+        border-color: $text-color;
         outline: none;
         box-shadow: 0 0 8px #ff5f8f88;
         background-color: rgba(255, 255, 255, 0.1);
@@ -79,11 +83,11 @@
         }
 
         &.valid {
-          color: #00ff99;
+          color: $green;
 
           &::before {
             content: '✓ ';
-            color: #00ff99;
+            color: $green;
           }
         }
       }
@@ -92,8 +96,8 @@
     button {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(90deg, #ff0040, #ff5f8f);
-      color: white;
+      background: $text-color;
+      color: $white;
       border: none;
       border-radius: 12px;
       font-weight: bold;
@@ -105,7 +109,7 @@
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 0 10px #ff5f8f88;
+        box-shadow: 0 0 10px $text-color
       }
 
       &:active {
@@ -115,7 +119,7 @@
       .loader {
         width: 18px;
         height: 18px;
-        border: 3px solid white;
+        border: 3px solid $white;
         border-top: 3px solid transparent;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
@@ -126,7 +130,7 @@
     .message {
       margin-top: 20px;
       text-align: center;
-      color: #00ff99;
+      color: $green;
       font-size: 14px;
     }
   }
