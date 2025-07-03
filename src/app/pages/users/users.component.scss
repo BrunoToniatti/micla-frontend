@@ -1,29 +1,31 @@
+@use '../../../styles/variables' as *;
+
 .message {
-    // border: 1px solid white;
+  // border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+
+  .text {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    background-color: rgb(133, 206, 133);
+    padding: 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-bottom: 25px;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 10px;
+    border: 2px solid green;
 
-    .text {
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      background-color: rgb(133, 206, 133);
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border-radius: 10px;
-      border: 2px solid green;
-
-      &.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
+}
 
 .users-table {
   width: 100%;
@@ -33,19 +35,18 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #1b1f27;
-    color: white;
+    background-color: $white;
+    color: $text-color;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(255, 0, 64, 0.1);
 
     thead {
-      background-color: #0d1117;
+      background-color: $text-color;
 
       th {
         padding: 1rem;
         text-align: left;
-        color: #ff0040;
+        color: $white;
         font-weight: bold;
         text-transform: uppercase;
         font-size: 14px;
@@ -57,54 +58,62 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: #2a2f3a;
+          background-color: $hover-white;
         }
 
         td {
           padding: 1rem;
-          border-top: 1px solid #2e2e2e;
+          border-top: 1px solid $hover-white;
           font-size: 15px;
+          cursor: pointer;
         }
       }
     }
+
     .delete-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: #ff0040;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(255, 0, 64, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #ff0040;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+      box-shadow: 0 4px 12px rgba(255, 0, 64, 0.3);
 
-  mat-icon {
-    font-size: 18px;
-  }
+      mat-icon {
+        font-size: 18px;
+      }
 
-  &:hover {
-    background: #e60039;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(255, 0, 64, 0.5);
-  }
+      &:hover {
+        background: #e60039;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(255, 0, 64, 0.5);
+      }
 
-  &:active {
-    transform: scale(0.97);
-  }
+      &:active {
+        transform: scale(0.97);
+      }
 
-  @media (max-width: 600px) {
-    width: 100%;
-    justify-content: center;
-  }
-}
+      @media (max-width: 600px) {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   }
 
   @media (max-width: 768px) {
-    table, thead, tbody, th, td, tr {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
       display: block;
     }
 
@@ -141,9 +150,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background-color: #2a2f3a;
+    background-color: $text-color;
     border-radius: 10px;
-    color: white;
+    color: $white;
     font-weight: bold;
     border: none;
     cursor: pointer;
@@ -151,8 +160,8 @@
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 
     &:hover {
-      background-color: #2e2e2e;
-      color: #ff0040;
+      background-color: $hover-white;
+      color: $text-color;
       transform: translateY(-2px);
     }
 
@@ -172,11 +181,10 @@
 }
 
 .form {
-  background-color: #1b1f27;
+  background-color: $white;
   padding: 25px;
   border-radius: 15px;
-  box-shadow: 0 0 15px rgba(255, 0, 64, 0.15);
-  color: white;
+  color: $text-color;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
@@ -192,7 +200,7 @@
   }
 
   label {
-    color: #ff0040;
+    color: $text-color;
     font-weight: bold;
     font-size: 14px;
   }
@@ -200,41 +208,42 @@
   input,
   select {
     padding: 12px;
-    background-color: #0d1117;
-    border: 1px solid #2e2e2e;
-    color: white;
+    background-color: $hover-white;
+    border: 1px solid $second-white;
+    color: $text-color;
     border-radius: 8px;
     font-size: 14px;
     transition: border 0.3s ease;
 
     &:focus {
-      border-color: #ff0040;
+      border-color: $text-color;
       outline: none;
-      box-shadow: 0 0 6px #ff0040;
+      box-shadow: 0 0 6px $text-color
     }
   }
 
   button {
     align-self: flex-end;
     padding: 10px 20px;
-    background-color: #2a2f3a;
+    background-color: $text-color;
     border-radius: 10px;
-    color: white;
+    color: $white;
     font-weight: bold;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #2e2e2e;
-      color: #ff0040;
+      background-color: $hover-white;
+      color: $text-color;
     }
   }
 
   @media (max-width: 768px) {
     padding: 20px;
 
-    input, select {
+    input,
+    select {
       font-size: 13px;
     }
 
@@ -249,9 +258,9 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
