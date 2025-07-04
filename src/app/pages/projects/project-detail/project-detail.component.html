@@ -1,1 +1,391 @@
-<p>project-detail works!</p>
+<div class="project-detail-container" [@fadeIn]>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Carregando projeto...</span>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && project">
+    <!-- Header do Projeto -->
+  <div class="project-header" [@slideIn]>
+    <div class="header-content">
+      <div class="project-info">
+        <div class="project-title">
+          <h1>{{project.name}}</h1>
+          <span class="project-id">#{{project.id}}</span>
+        </div>
+        <p class="project-description">{{project.description}}</p>
+
+        <div class="project-meta">
+          <div class="meta-item" *ngIf="project.manager">
+            <mat-icon>person</mat-icon>
+            <span>{{project.manager.full_name}}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>business</mat-icon>
+            <span>{{project.client}}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>schedule</mat-icon>
+            <span>{{formatDate(project.start_date)}} - {{formatDate(project.expected_end_date || '')}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-status">
+        <div class="status-badge" [ngClass]="getStatusColor(project.status)">
+          {{getStatusDisplayName(project.status)}}
+        </div>
+        <div class="priority-badge" [ngClass]="getPriorityColor(project.priority || '')">
+          {{getPriorityDisplayName(project.priority || '')}}
+        </div>
+        <div class="progress-section">
+          <div class="progress-label">
+            <span>Progresso</span>
+            <span class="progress-value">{{project.progress}}%</span>
+          </div>
+          <mat-progress-bar [value]="project.progress" mode="determinate"></mat-progress-bar>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="onEditProject()">
+        <mat-icon>edit</mat-icon>
+        Editar
+      </button>
+      <button mat-icon-button (click)="refreshData()" title="Atualizar dados">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onArchiveProject()">
+          <mat-icon>archive</mat-icon>
+          Arquivar
+        </button>
+        <button mat-menu-item (click)="onDeleteProject()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Tags e Equipe -->
+  <div class="project-overview" [@fadeIn]>
+    <div class="tags-section">
+      <div class="section-header">
+        <h3>Tags</h3>
+        <button mat-mini-fab color="primary" (click)="onAddTag()" title="Adicionar tag">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="tags-container">
+        <mat-chip *ngFor="let tag of project.tags" class="tag-chip" [style.background-color]="tag.color">
+          {{tag.name}}
+          <button mat-icon-button class="remove-tag" (click)="onRemoveTag(tag.id)" title="Remover tag">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-chip>
+      </div>
+    </div>
+
+    <div class="team-section">
+      <div class="section-header">
+        <h3>Equipe</h3>
+        <button mat-mini-fab color="primary" (click)="onAddTeamMember()" title="Adicionar membro">
+          <mat-icon>person_add</mat-icon>
+        </button>
+      </div>
+      <div class="team-avatars">
+        <div class="team-member" *ngFor="let member of project.members" [title]="member.user.full_name + ' - ' + member.role_display">
+          <div class="member-info">
+            <div class="avatar">{{member.user.first_name.charAt(0)}}{{member.user.last_name.charAt(0)}}</div>
+            <span class="member-name">{{member.user.full_name}}</span>
+          </div>
+          <button mat-icon-button class="remove-member" (click)="onRemoveTeamMember(member.id)" title="Remover membro">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs com conteúdo -->
+  <mat-tab-group class="content-tabs" [@fadeIn]>
+
+    <!-- Aba Tarefas -->
+    <mat-tab label="Tarefas" [class]="'tab-content'">
+      <div class="tab-content">
+        <div class="section-header">
+          <h2>
+            <mat-icon>task_alt</mat-icon>
+            Tarefas
+          </h2>
+          <button mat-raised-button color="primary" (click)="onAddTask()">
+            <mat-icon>add</mat-icon>
+            Nova Tarefa
+          </button>
+        </div>
+
+        <div class="tasks-grid">
+          <mat-card *ngFor="let task of tasks" class="task-card">
+            <mat-card-header>
+              <div class="task-header">
+                <h3>{{task.name}}</h3>
+                <div class="task-actions">
+                  <button mat-icon-button (click)="toggleTaskStatus(task.id)" title="Marcar como concluída">
+                    <mat-icon>{{task.status === 'completed' ? 'check_circle' : 'radio_button_unchecked'}}</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="onEditTask(task.id)" title="Editar tarefa">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="onDeleteTask(task.id)" title="Excluir tarefa">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="task-info">
+                <div class="task-meta">
+                  <span class="responsible">
+                    <mat-icon>person</mat-icon>
+                    {{task.assigned_to?.full_name || 'Não atribuído'}}
+                  </span>
+                  <span class="deadline">
+                    <mat-icon>schedule</mat-icon>
+                    {{task.deadline | date:'dd/MM/yyyy'}}
+                  </span>
+                </div>
+
+                <div class="task-status">
+                  <span class="status-badge" [ngClass]="getStatusColor(task.status)">
+                    {{getStatusDisplayName(task.status)}}
+                  </span>
+                  <div class="progress-info">
+                    <span>{{task.progress}}%</span>
+                    <mat-progress-bar [value]="task.progress" mode="determinate"></mat-progress-bar>
+                  </div>
+                </div>
+
+                <!-- To-Do List (Checklist) -->
+                <div class="task-checklist">
+                  <h4>
+                    <mat-icon>checklist</mat-icon>
+                    To-Do List
+                  </h4>
+                  <div class="checklist-items">
+                    <div class="checklist-item" *ngFor="let item of task.checklist; let i = index">
+                      <mat-checkbox
+                        [checked]="item.completed"
+                        (change)="toggleChecklistItem(task.id, i)">
+                      </mat-checkbox>
+                      <span class="item-text" [ngClass]="{'completed': item.completed}">
+                        {{item.item}}
+                      </span>
+                      <div class="item-actions">
+                        <button mat-icon-button (click)="removeChecklistItem(task.id, i)" title="Remover item">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="add-checklist-item" (click)="addChecklistItem(task.id)">
+                      <mat-icon>add</mat-icon>
+                      <span>Adicionar item</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Aba Tempo -->
+    <mat-tab label="Tempo">
+      <div class="tab-content">
+        <div class="section-header">
+          <h2>
+            <mat-icon>access_time</mat-icon>
+            Registro de Tempo
+          </h2>
+          <button mat-raised-button color="primary" (click)="onAddTimeEntry()">
+            <mat-icon>add</mat-icon>
+            Registrar Tempo
+          </button>
+        </div>
+
+        <div class="time-summary">
+          <div class="summary-card">
+            <h3>Total de Horas</h3>
+            <span class="total-hours">{{getTotalHours()}}h</span>
+          </div>
+        </div>
+
+        <div class="time-entries">
+          <mat-card *ngFor="let entry of timeEntries" class="time-entry">
+            <div class="entry-header">
+              <div class="user-info">
+                <div class="user-avatar">{{entry.user.first_name.charAt(0)}}{{entry.user.last_name.charAt(0)}}</div>
+                <div class="user-details">
+                  <span class="user-name">{{entry.user.full_name}}</span>
+                  <span class="entry-date">{{entry.date | date:'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+              <div class="entry-actions">
+                <div class="entry-hours">
+                  <span class="hours">{{entry.hours}}h</span>
+                </div>
+                <button mat-icon-button (click)="onEditTimeEntry(entry.id)" title="Editar registro">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="onDeleteTimeEntry(entry.id)" title="Excluir registro">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="entry-content">
+              <div class="activity-type">{{entry.activity_type_display}}</div>
+              <div class="entry-description">{{entry.description}}</div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Aba Anexos -->
+    <mat-tab label="Anexos">
+      <div class="tab-content">
+        <div class="section-header">
+          <h2>
+            <mat-icon>attach_file</mat-icon>
+            Anexos
+          </h2>
+          <button mat-raised-button color="primary" (click)="onUploadFile()">
+            <mat-icon>file_upload</mat-icon>
+            Enviar Arquivo
+          </button>
+        </div>
+
+        <div class="attachments-grid">
+          <mat-card *ngFor="let attachment of attachments" class="attachment-card">
+            <div class="attachment-icon">
+              <mat-icon>{{getFileIcon(attachment.file_type)}}</mat-icon>
+            </div>
+            <div class="attachment-info">
+              <h3>{{attachment.name}}</h3>
+              <div class="attachment-meta">
+                <span class="file-size">{{formatFileSize(attachment.file_size)}}</span>
+                <span class="upload-date">{{attachment.uploaded_at | date:'dd/MM/yyyy'}}</span>
+                <span class="uploaded-by">por {{attachment.uploaded_by.full_name}}</span>
+              </div>
+            </div>
+            <div class="attachment-actions">
+              <button mat-icon-button (click)="onDownloadFile(attachment.id)" title="Baixar arquivo">
+                <mat-icon>download</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDeleteFile(attachment.id)" title="Excluir arquivo">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Aba Comentários -->
+    <mat-tab label="Comentários">
+      <div class="tab-content">
+        <div class="section-header">
+          <h2>
+            <mat-icon>comment</mat-icon>
+            Comentários
+          </h2>
+        </div>
+
+        <div class="comments-section">
+          <div class="new-comment">
+            <div class="comment-input">
+              <textarea
+                [(ngModel)]="newComment"
+                placeholder="Adicionar comentário..."
+                rows="3">
+              </textarea>
+              <button mat-raised-button color="primary" (click)="addComment()">
+                <mat-icon>send</mat-icon>
+                Enviar
+              </button>
+            </div>
+          </div>
+
+          <div class="comments-list">
+            <div *ngFor="let comment of comments" class="comment-item">
+              <div class="comment-avatar">{{comment.user.first_name.charAt(0)}}{{comment.user.last_name.charAt(0)}}</div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">{{comment.user.full_name}}</span>
+                  <span class="comment-date">{{comment.created_at | date:'dd/MM/yyyy HH:mm'}}</span>
+                  <div class="comment-actions">
+                    <button mat-icon-button (click)="onEditComment(comment.id)" title="Editar comentário">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="onDeleteComment(comment.id)" title="Excluir comentário">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="comment-message">{{comment.message}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Aba Histórico -->
+    <mat-tab label="Histórico">
+      <div class="tab-content">
+        <div class="section-header">
+          <h2>
+            <mat-icon>history</mat-icon>
+            Histórico de Atividades
+          </h2>
+        </div>
+
+        <div class="activity-timeline">
+          <div *ngFor="let activity of activityLog" class="activity-item">
+            <div class="activity-icon">
+              <mat-icon>{{getActivityIcon(activity.action)}}</mat-icon>
+            </div>
+            <div class="activity-content">
+              <div class="activity-header">
+                <span class="activity-user">{{activity.user.full_name}}</span>
+                <span class="activity-date">{{activity.created_at | date:'dd/MM/yyyy HH:mm'}}</span>
+              </div>
+              <div class="activity-description">
+                <span class="activity-action">{{activity.action_display}}</span>
+                <span class="activity-target">{{activity.target}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !project" class="empty-state">
+    <mat-icon>error_outline</mat-icon>
+    <h3>Projeto não encontrado</h3>
+    <p>O projeto solicitado não foi encontrado ou você não tem permissão para visualizá-lo.</p>
+    <button mat-raised-button color="primary" routerLink="/projects">
+      Voltar aos Projetos
+    </button>
+  </div>
+</div>

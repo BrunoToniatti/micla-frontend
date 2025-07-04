@@ -1,0 +1,347 @@
+@use '../../../../styles/variables' as *;
+
+.project-form-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: $text-color;
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+
+    mat-icon {
+      font-size: 2.2rem;
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1.8rem;
+
+      mat-icon {
+        font-size: 1.8rem;
+        width: 1.8rem;
+        height: 1.8rem;
+      }
+    }
+  }
+
+  p {
+    color: lighten($text-color, 20%);
+    font-size: 1.1rem;
+    margin-top: 8px;
+    margin-bottom: 0;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.form-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  mat-card-content {
+    padding: 32px;
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+  }
+}
+
+.form-section {
+  margin-bottom: 32px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: $text-color;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(149, 21, 63, 0.1);
+
+    mat-icon {
+      font-size: 1.4rem;
+      width: 1.4rem;
+      height: 1.4rem;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-row {
+  margin-bottom: 20px;
+
+  &.double-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Estilização dos campos do formulário
+mat-form-field {
+  width: 100%;
+
+  &.mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+
+      .mat-mdc-form-field-outline {
+        .mat-mdc-form-field-outline-start,
+        .mat-mdc-form-field-outline-gap,
+        .mat-mdc-form-field-outline-end {
+          border-color: rgba(149, 21, 63, 0.2);
+        }
+      }
+
+      &.mdc-text-field--focused {
+        .mat-mdc-form-field-outline {
+          .mat-mdc-form-field-outline-thick {
+            .mat-mdc-form-field-outline-start,
+            .mat-mdc-form-field-outline-gap,
+            .mat-mdc-form-field-outline-end {
+              border-color: $text-color;
+            }
+          }
+        }
+      }
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background-color: rgba(149, 21, 63, 0.05);
+    }
+
+    .mat-mdc-floating-label {
+      color: lighten($text-color, 20%);
+    }
+
+    &.mat-focused .mat-mdc-floating-label {
+      color: $text-color;
+    }
+
+    input, textarea {
+      color: $text-color;
+    }
+
+    .mat-mdc-select-value {
+      color: $text-color;
+    }
+
+    .mat-mdc-select-arrow {
+      color: $text-color;
+    }
+  }
+
+  mat-error {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+
+  mat-datepicker-toggle {
+    .mat-datepicker-toggle-default-icon {
+      color: $text-color;
+    }
+  }
+}
+
+// Botões de ação
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(149, 21, 63, 0.1);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cancel-btn {
+    color: lighten($text-color, 10%);
+    border: 1px solid lighten($text-color, 10%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(149, 21, 63, 0.05);
+      border-color: $text-color;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .submit-btn {
+    background-color: $text-color;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(149, 21, 63, 0.3);
+    min-width: 140px;
+
+    &:hover:not(:disabled) {
+      background-color: darken($text-color, 10%);
+      box-shadow: 0 4px 12px rgba(149, 21, 63, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    mat-spinner {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Animações
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+.form-section:nth-child(1) { animation-delay: 0.1s; }
+.form-section:nth-child(2) { animation-delay: 0.2s; }
+.form-section:nth-child(3) { animation-delay: 0.3s; }
+.form-section:nth-child(4) { animation-delay: 0.4s; }
+
+// Validação visual
+.ng-invalid.ng-touched {
+  mat-form-field {
+    .mat-mdc-form-field-outline {
+      .mat-mdc-form-field-outline-start,
+      .mat-mdc-form-field-outline-gap,
+      .mat-mdc-form-field-outline-end {
+        border-color: #e53e3e !important;
+      }
+    }
+  }
+}
+
+.ng-valid.ng-touched {
+  mat-form-field {
+    .mat-mdc-form-field-outline {
+      .mat-mdc-form-field-outline-start,
+      .mat-mdc-form-field-outline-gap,
+      .mat-mdc-form-field-outline-end {
+        border-color: #38a169 !important;
+      }
+    }
+  }
+}
+
+// Responsividade adicional
+@media (max-width: 480px) {
+  .form-header {
+    h1 {
+      font-size: 1.6rem;
+
+      mat-icon {
+        font-size: 1.6rem;
+        width: 1.6rem;
+        height: 1.6rem;
+      }
+    }
+  }
+
+  .form-card {
+    mat-card-content {
+      padding: 16px;
+    }
+  }
+
+  .form-section {
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Estilos para snackbar
+::ng-deep {
+  .snack-success {
+    background-color: #38a169;
+    color: white;
+  }
+
+  .snack-error {
+    background-color: #e53e3e;
+    color: white;
+  }
+}
