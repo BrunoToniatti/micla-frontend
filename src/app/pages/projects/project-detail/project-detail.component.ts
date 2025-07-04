@@ -118,7 +118,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.projectId = +params['id'];
       if (this.projectId) {
-        this.loadProjectDetails();
+        this.getProjectById(this.projectId);
       }
     });
   }
@@ -127,381 +127,395 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  private loadProjectDetails(): void {
-    if (!this.projectId) return;
 
-    this.isLoading = true;
-
-    // Simular carregamento com dados hardcoded
-    setTimeout(() => {
-      this.loadHardcodedData();
-    }, 1000);
+  getProjectById(id: number){
+    this.projectsService.getProjectById(id).subscribe({
+      next: (project: Project) => {
+        this.project = project;
+        this.tasks = project.tasks || [];
+        this.timeEntries = project.time_entries || [];
+        this.attachments = project.attachments || [];
+        this.comments = project.comments || [];
+        this.activityLog = project.activity_log || [];
+      }
+    })
   }
 
-  private loadHardcodedData(): void {
-    // Dados hardcoded mais completos para demonstração
-    this.project = {
-      id: this.projectId!,
-      name: 'Sistema de Gestão MICLA',
-      description: 'Desenvolvimento completo de sistema de gestão de projetos para a empresa MICLA Engineering & Design',
-      status: 'in_progress',
-      status_display: 'Em Andamento',
-      priority: 'high',
-      start_date: '2024-01-15',
-      expected_end_date: '2024-06-30',
-      client: 'MICLA Engineering',
-      progress: 75,
-      manager: {
-        id: 1,
-        username: 'joao',
-        first_name: 'João',
-        last_name: 'Silva',
-        email: 'joao@example.com',
-        full_name: 'João Silva'
-      },
-      tags: [
-        { id: 1, name: 'Frontend', color: '#3f51b5' },
-        { id: 2, name: 'Backend', color: '#f44336' },
-        { id: 3, name: 'Angular', color: '#ff9800' },
-        { id: 4, name: 'Django', color: '#4caf50' }
-      ],
-      members: [
-        {
-          id: 1,
-          user: {
-            id: 1,
-            username: 'joao',
-            first_name: 'João',
-            last_name: 'Silva',
-            email: 'joao@example.com',
-            full_name: 'João Silva'
-          },
-          role: 'manager',
-          role_display: 'Gerente',
-          joined_at: '2024-01-15T10:00:00Z'
-        },
-        {
-          id: 2,
-          user: {
-            id: 2,
-            username: 'maria',
-            first_name: 'Maria',
-            last_name: 'Santos',
-            email: 'maria@example.com',
-            full_name: 'Maria Santos'
-          },
-          role: 'developer',
-          role_display: 'Desenvolvedora',
-          joined_at: '2024-01-16T10:00:00Z'
-        },
-        {
-          id: 3,
-          user: {
-            id: 3,
-            username: 'carlos',
-            first_name: 'Carlos',
-            last_name: 'Oliveira',
-            email: 'carlos@example.com',
-            full_name: 'Carlos Oliveira'
-          },
-          role: 'designer',
-          role_display: 'Designer',
-          joined_at: '2024-01-17T10:00:00Z'
-        }
-      ]
-    };
+  // private loadProjectDetails(): void {
+  //   if (!this.projectId) return;
 
-    this.tasks = [
-      {
-        id: 1,
-        title: 'Configurar ambiente de desenvolvimento',
-        name: 'Configurar ambiente de desenvolvimento',
-        description: 'Setup inicial do projeto Angular e Django',
-        status: 'completed',
-        priority: 'high',
-        assigned_to: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        deadline: '2024-02-01',
-        created_at: '2024-01-15T10:00:00Z',
-        progress: 100,
-        checklist: [
-          { id: 1, item: 'Instalar Node.js e npm', completed: true },
-          { id: 2, item: 'Configurar Angular CLI', completed: true },
-          { id: 3, item: 'Criar projeto Angular', completed: true },
-          { id: 4, item: 'Configurar Django backend', completed: true },
-          { id: 5, item: 'Configurar banco de dados', completed: true }
-        ]
-      },
-      {
-        id: 2,
-        title: 'Desenvolver tela de login',
-        name: 'Desenvolver tela de login',
-        description: 'Implementar autenticação e autorização',
-        status: 'in_progress',
-        priority: 'medium',
-        assigned_to: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        deadline: '2024-02-15',
-        created_at: '2024-01-16T10:00:00Z',
-        progress: 85,
-        checklist: [
-          { id: 1, item: 'Criar componente de login', completed: true },
-          { id: 2, item: 'Implementar formulário de login', completed: true },
-          { id: 3, item: 'Integrar com API de autenticação', completed: true },
-          { id: 4, item: 'Implementar guards de rota', completed: false },
-          { id: 5, item: 'Adicionar validação de formulário', completed: false },
-          { id: 6, item: 'Implementar recuperação de senha', completed: false }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Design do sistema',
-        name: 'Design do sistema',
-        description: 'Criar wireframes e protótipos',
-        status: 'todo',
-        priority: 'low',
-        assigned_to: {
-          id: 3,
-          username: 'carlos',
-          first_name: 'Carlos',
-          last_name: 'Oliveira',
-          email: 'carlos@example.com',
-          full_name: 'Carlos Oliveira'
-        },
-        deadline: '2024-02-20',
-        created_at: '2024-01-17T10:00:00Z',
-        progress: 30,
-        checklist: [
-          { id: 1, item: 'Criar wireframes das telas principais', completed: true },
-          { id: 2, item: 'Definir paleta de cores', completed: true },
-          { id: 3, item: 'Criar protótipo interativo', completed: false },
-          { id: 4, item: 'Revisar com stakeholders', completed: false },
-          { id: 5, item: 'Criar guia de estilo', completed: false }
-        ]
-      }
-    ];
+  //   this.isLoading = true;
 
-    this.timeEntries = [
-      {
-        id: 1,
-        user: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        date: '2024-01-20',
-        hours: 8,
-        activity_type: 'development',
-        activity_type_display: 'Desenvolvimento',
-        description: 'Implementação da tela de login e configuração do Angular',
-        created_at: '2024-01-20T18:00:00Z'
-      },
-      {
-        id: 2,
-        user: {
-          id: 1,
-          username: 'joao',
-          first_name: 'João',
-          last_name: 'Silva',
-          email: 'joao@example.com',
-          full_name: 'João Silva'
-        },
-        date: '2024-01-21',
-        hours: 6,
-        activity_type: 'meeting',
-        activity_type_display: 'Reunião',
-        description: 'Reunião de planejamento com o cliente',
-        created_at: '2024-01-21T15:00:00Z'
-      },
-      {
-        id: 3,
-        user: {
-          id: 3,
-          username: 'carlos',
-          first_name: 'Carlos',
-          last_name: 'Oliveira',
-          email: 'carlos@example.com',
-          full_name: 'Carlos Oliveira'
-        },
-        date: '2024-01-22',
-        hours: 4,
-        activity_type: 'design',
-        activity_type_display: 'Design',
-        description: 'Criação de mockups para as telas principais',
-        created_at: '2024-01-22T12:00:00Z'
-      }
-    ];
+  //   // Simular carregamento com dados hardcoded
+  //   setTimeout(() => {
+  //     this.getProjectById();
+  //   }, 1000);
+  // }
 
-    this.attachments = [
-      {
-        id: 1,
-        name: 'Especificacao_Tecnica.pdf',
-        file: '/assets/files/spec.pdf',
-        file_type: 'pdf',
-        file_size: 2621440,
-        uploaded_by: {
-          id: 1,
-          username: 'joao',
-          first_name: 'João',
-          last_name: 'Silva',
-          email: 'joao@example.com',
-          full_name: 'João Silva'
-        },
-        uploaded_at: '2024-01-15T12:00:00Z'
-      },
-      {
-        id: 2,
-        name: 'Wireframes_Sistema.fig',
-        file: '/assets/files/wireframes.fig',
-        file_type: 'figma',
-        file_size: 5242880,
-        uploaded_by: {
-          id: 3,
-          username: 'carlos',
-          first_name: 'Carlos',
-          last_name: 'Oliveira',
-          email: 'carlos@example.com',
-          full_name: 'Carlos Oliveira'
-        },
-        uploaded_at: '2024-01-18T14:30:00Z'
-      },
-      {
-        id: 3,
-        name: 'Database_Schema.sql',
-        file: '/assets/files/schema.sql',
-        file_type: 'sql',
-        file_size: 15360,
-        uploaded_by: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        uploaded_at: '2024-01-19T16:45:00Z'
-      }
-    ];
+  // private loadHardcodedData(): void {
+  //   // Dados hardcoded mais completos para demonstração
+  //   this.project = {
+  //     id: this.projectId!,
+  //     name: 'Sistema de Gestão MICLA',
+  //     description: 'Desenvolvimento completo de sistema de gestão de projetos para a empresa MICLA Engineering & Design',
+  //     status: 'in_progress',
+  //     status_display: 'Em Andamento',
+  //     priority: 'high',
+  //     start_date: '2024-01-15',
+  //     expected_end_date: '2024-06-30',
+  //     client: 'MICLA Engineering',
+  //     progress: 75,
+  //     manager: {
+  //       id: 1,
+  //       username: 'joao',
+  //       first_name: 'João',
+  //       last_name: 'Silva',
+  //       email: 'joao@example.com',
+  //       full_name: 'João Silva'
+  //     },
+  //     tags: [
+  //       { id: 1, name: 'Frontend', color: '#3f51b5' },
+  //       { id: 2, name: 'Backend', color: '#f44336' },
+  //       { id: 3, name: 'Angular', color: '#ff9800' },
+  //       { id: 4, name: 'Django', color: '#4caf50' }
+  //     ],
+  //     members: [
+  //       {
+  //         id: 1,
+  //         user: {
+  //           id: 1,
+  //           username: 'joao',
+  //           first_name: 'João',
+  //           last_name: 'Silva',
+  //           email: 'joao@example.com',
+  //           full_name: 'João Silva'
+  //         },
+  //         role: 'manager',
+  //         role_display: 'Gerente',
+  //         joined_at: '2024-01-15T10:00:00Z'
+  //       },
+  //       {
+  //         id: 2,
+  //         user: {
+  //           id: 2,
+  //           username: 'maria',
+  //           first_name: 'Maria',
+  //           last_name: 'Santos',
+  //           email: 'maria@example.com',
+  //           full_name: 'Maria Santos'
+  //         },
+  //         role: 'developer',
+  //         role_display: 'Desenvolvedora',
+  //         joined_at: '2024-01-16T10:00:00Z'
+  //       },
+  //       {
+  //         id: 3,
+  //         user: {
+  //           id: 3,
+  //           username: 'carlos',
+  //           first_name: 'Carlos',
+  //           last_name: 'Oliveira',
+  //           email: 'carlos@example.com',
+  //           full_name: 'Carlos Oliveira'
+  //         },
+  //         role: 'designer',
+  //         role_display: 'Designer',
+  //         joined_at: '2024-01-17T10:00:00Z'
+  //       }
+  //     ]
+  //   };
 
-    this.comments = [
-      {
-        id: 1,
-        user: {
-          id: 1,
-          username: 'joao',
-          first_name: 'João',
-          last_name: 'Silva',
-          email: 'joao@example.com',
-          full_name: 'João Silva'
-        },
-        content: 'Pessoal, precisamos acelerar o desenvolvimento da API. O cliente quer uma demo na próxima semana.',
-        message: 'Pessoal, precisamos acelerar o desenvolvimento da API. O cliente quer uma demo na próxima semana.',
-        created_at: '2024-01-20T14:30:00Z'
-      },
-      {
-        id: 2,
-        user: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        content: 'Já terminei a configuração do ambiente. Posso começar com as APIs hoje mesmo.',
-        message: 'Já terminei a configuração do ambiente. Posso começar com as APIs hoje mesmo.',
-        created_at: '2024-01-20T15:15:00Z'
-      },
-      {
-        id: 3,
-        user: {
-          id: 3,
-          username: 'carlos',
-          first_name: 'Carlos',
-          last_name: 'Oliveira',
-          email: 'carlos@example.com',
-          full_name: 'Carlos Oliveira'
-        },
-        content: 'Os wireframes estão quase prontos. Vou finalizar hoje e já compartilho com vocês.',
-        message: 'Os wireframes estão quase prontos. Vou finalizar hoje e já compartilho com vocês.',
-        created_at: '2024-01-22T10:00:00Z'
-      }
-    ];
+  //   this.tasks = [
+  //     {
+  //       id: 1,
+  //       title: 'Configurar ambiente de desenvolvimento',
+  //       name: 'Configurar ambiente de desenvolvimento',
+  //       description: 'Setup inicial do projeto Angular e Django',
+  //       status: 'completed',
+  //       priority: 'high',
+  //       assigned_to: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       deadline: '2024-02-01',
+  //       created_at: '2024-01-15T10:00:00Z',
+  //       progress: 100,
+  //       checklist: [
+  //         { id: 1, item: 'Instalar Node.js e npm', completed: true },
+  //         { id: 2, item: 'Configurar Angular CLI', completed: true },
+  //         { id: 3, item: 'Criar projeto Angular', completed: true },
+  //         { id: 4, item: 'Configurar Django backend', completed: true },
+  //         { id: 5, item: 'Configurar banco de dados', completed: true }
+  //       ]
+  //     },
+  //     {
+  //       id: 2,
+  //       title: 'Desenvolver tela de login',
+  //       name: 'Desenvolver tela de login',
+  //       description: 'Implementar autenticação e autorização',
+  //       status: 'in_progress',
+  //       priority: 'medium',
+  //       assigned_to: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       deadline: '2024-02-15',
+  //       created_at: '2024-01-16T10:00:00Z',
+  //       progress: 85,
+  //       checklist: [
+  //         { id: 1, item: 'Criar componente de login', completed: true },
+  //         { id: 2, item: 'Implementar formulário de login', completed: true },
+  //         { id: 3, item: 'Integrar com API de autenticação', completed: true },
+  //         { id: 4, item: 'Implementar guards de rota', completed: false },
+  //         { id: 5, item: 'Adicionar validação de formulário', completed: false },
+  //         { id: 6, item: 'Implementar recuperação de senha', completed: false }
+  //       ]
+  //     },
+  //     {
+  //       id: 3,
+  //       title: 'Design do sistema',
+  //       name: 'Design do sistema',
+  //       description: 'Criar wireframes e protótipos',
+  //       status: 'todo',
+  //       priority: 'low',
+  //       assigned_to: {
+  //         id: 3,
+  //         username: 'carlos',
+  //         first_name: 'Carlos',
+  //         last_name: 'Oliveira',
+  //         email: 'carlos@example.com',
+  //         full_name: 'Carlos Oliveira'
+  //       },
+  //       deadline: '2024-02-20',
+  //       created_at: '2024-01-17T10:00:00Z',
+  //       progress: 30,
+  //       checklist: [
+  //         { id: 1, item: 'Criar wireframes das telas principais', completed: true },
+  //         { id: 2, item: 'Definir paleta de cores', completed: true },
+  //         { id: 3, item: 'Criar protótipo interativo', completed: false },
+  //         { id: 4, item: 'Revisar com stakeholders', completed: false },
+  //         { id: 5, item: 'Criar guia de estilo', completed: false }
+  //       ]
+  //     }
+  //   ];
 
-    this.activityLog = [
-      {
-        id: 1,
-        user: {
-          id: 2,
-          username: 'maria',
-          first_name: 'Maria',
-          last_name: 'Santos',
-          email: 'maria@example.com',
-          full_name: 'Maria Santos'
-        },
-        action: 'task_completed',
-        action_display: 'Tarefa concluída',
-        target: 'Configurar ambiente de desenvolvimento',
-        description: 'Tarefa concluída com sucesso',
-        created_at: '2024-01-20T16:30:00Z',
-        timestamp: '2024-01-20T16:30:00Z',
-        details: { task_id: 1 }
-      },
-      {
-        id: 2,
-        user: {
-          id: 3,
-          username: 'carlos',
-          first_name: 'Carlos',
-          last_name: 'Oliveira',
-          email: 'carlos@example.com',
-          full_name: 'Carlos Oliveira'
-        },
-        action: 'file_uploaded',
-        action_display: 'Arquivo enviado',
-        target: 'Wireframes_Sistema.fig',
-        description: 'Arquivo de wireframes enviado',
-        created_at: '2024-01-18T14:30:00Z',
-        timestamp: '2024-01-18T14:30:00Z',
-        details: { file_id: 2 }
-      },
-      {
-        id: 3,
-        user: {
-          id: 1,
-          username: 'joao',
-          first_name: 'João',
-          last_name: 'Silva',
-          email: 'joao@example.com',
-          full_name: 'João Silva'
-        },
-        action: 'project_created',
-        action_display: 'Projeto criado',
-        target: 'Sistema de Gestão MICLA',
-        description: 'Projeto criado com sucesso',
-        created_at: '2024-01-15T10:00:00Z',
-        timestamp: '2024-01-15T10:00:00Z',
-        details: { project_id: this.projectId }
-      }
-    ];
+  //   this.timeEntries = [
+  //     {
+  //       id: 1,
+  //       user: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       date: '2024-01-20',
+  //       hours: 8,
+  //       activity_type: 'development',
+  //       activity_type_display: 'Desenvolvimento',
+  //       description: 'Implementação da tela de login e configuração do Angular',
+  //       created_at: '2024-01-20T18:00:00Z'
+  //     },
+  //     {
+  //       id: 2,
+  //       user: {
+  //         id: 1,
+  //         username: 'joao',
+  //         first_name: 'João',
+  //         last_name: 'Silva',
+  //         email: 'joao@example.com',
+  //         full_name: 'João Silva'
+  //       },
+  //       date: '2024-01-21',
+  //       hours: 6,
+  //       activity_type: 'meeting',
+  //       activity_type_display: 'Reunião',
+  //       description: 'Reunião de planejamento com o cliente',
+  //       created_at: '2024-01-21T15:00:00Z'
+  //     },
+  //     {
+  //       id: 3,
+  //       user: {
+  //         id: 3,
+  //         username: 'carlos',
+  //         first_name: 'Carlos',
+  //         last_name: 'Oliveira',
+  //         email: 'carlos@example.com',
+  //         full_name: 'Carlos Oliveira'
+  //       },
+  //       date: '2024-01-22',
+  //       hours: 4,
+  //       activity_type: 'design',
+  //       activity_type_display: 'Design',
+  //       description: 'Criação de mockups para as telas principais',
+  //       created_at: '2024-01-22T12:00:00Z'
+  //     }
+  //   ];
 
-    this.isLoading = false;
-  }
+  //   this.attachments = [
+  //     {
+  //       id: 1,
+  //       name: 'Especificacao_Tecnica.pdf',
+  //       file: '/assets/files/spec.pdf',
+  //       file_type: 'pdf',
+  //       file_size: 2621440,
+  //       uploaded_by: {
+  //         id: 1,
+  //         username: 'joao',
+  //         first_name: 'João',
+  //         last_name: 'Silva',
+  //         email: 'joao@example.com',
+  //         full_name: 'João Silva'
+  //       },
+  //       uploaded_at: '2024-01-15T12:00:00Z'
+  //     },
+  //     {
+  //       id: 2,
+  //       name: 'Wireframes_Sistema.fig',
+  //       file: '/assets/files/wireframes.fig',
+  //       file_type: 'figma',
+  //       file_size: 5242880,
+  //       uploaded_by: {
+  //         id: 3,
+  //         username: 'carlos',
+  //         first_name: 'Carlos',
+  //         last_name: 'Oliveira',
+  //         email: 'carlos@example.com',
+  //         full_name: 'Carlos Oliveira'
+  //       },
+  //       uploaded_at: '2024-01-18T14:30:00Z'
+  //     },
+  //     {
+  //       id: 3,
+  //       name: 'Database_Schema.sql',
+  //       file: '/assets/files/schema.sql',
+  //       file_type: 'sql',
+  //       file_size: 15360,
+  //       uploaded_by: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       uploaded_at: '2024-01-19T16:45:00Z'
+  //     }
+  //   ];
+
+  //   this.comments = [
+  //     {
+  //       id: 1,
+  //       user: {
+  //         id: 1,
+  //         username: 'joao',
+  //         first_name: 'João',
+  //         last_name: 'Silva',
+  //         email: 'joao@example.com',
+  //         full_name: 'João Silva'
+  //       },
+  //       content: 'Pessoal, precisamos acelerar o desenvolvimento da API. O cliente quer uma demo na próxima semana.',
+  //       message: 'Pessoal, precisamos acelerar o desenvolvimento da API. O cliente quer uma demo na próxima semana.',
+  //       created_at: '2024-01-20T14:30:00Z'
+  //     },
+  //     {
+  //       id: 2,
+  //       user: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       content: 'Já terminei a configuração do ambiente. Posso começar com as APIs hoje mesmo.',
+  //       message: 'Já terminei a configuração do ambiente. Posso começar com as APIs hoje mesmo.',
+  //       created_at: '2024-01-20T15:15:00Z'
+  //     },
+  //     {
+  //       id: 3,
+  //       user: {
+  //         id: 3,
+  //         username: 'carlos',
+  //         first_name: 'Carlos',
+  //         last_name: 'Oliveira',
+  //         email: 'carlos@example.com',
+  //         full_name: 'Carlos Oliveira'
+  //       },
+  //       content: 'Os wireframes estão quase prontos. Vou finalizar hoje e já compartilho com vocês.',
+  //       message: 'Os wireframes estão quase prontos. Vou finalizar hoje e já compartilho com vocês.',
+  //       created_at: '2024-01-22T10:00:00Z'
+  //     }
+  //   ];
+
+  //   this.activityLog = [
+  //     {
+  //       id: 1,
+  //       user: {
+  //         id: 2,
+  //         username: 'maria',
+  //         first_name: 'Maria',
+  //         last_name: 'Santos',
+  //         email: 'maria@example.com',
+  //         full_name: 'Maria Santos'
+  //       },
+  //       action: 'task_completed',
+  //       action_display: 'Tarefa concluída',
+  //       target: 'Configurar ambiente de desenvolvimento',
+  //       description: 'Tarefa concluída com sucesso',
+  //       created_at: '2024-01-20T16:30:00Z',
+  //       timestamp: '2024-01-20T16:30:00Z',
+  //       details: { task_id: 1 }
+  //     },
+  //     {
+  //       id: 2,
+  //       user: {
+  //         id: 3,
+  //         username: 'carlos',
+  //         first_name: 'Carlos',
+  //         last_name: 'Oliveira',
+  //         email: 'carlos@example.com',
+  //         full_name: 'Carlos Oliveira'
+  //       },
+  //       action: 'file_uploaded',
+  //       action_display: 'Arquivo enviado',
+  //       target: 'Wireframes_Sistema.fig',
+  //       description: 'Arquivo de wireframes enviado',
+  //       created_at: '2024-01-18T14:30:00Z',
+  //       timestamp: '2024-01-18T14:30:00Z',
+  //       details: { file_id: 2 }
+  //     },
+  //     {
+  //       id: 3,
+  //       user: {
+  //         id: 1,
+  //         username: 'joao',
+  //         first_name: 'João',
+  //         last_name: 'Silva',
+  //         email: 'joao@example.com',
+  //         full_name: 'João Silva'
+  //       },
+  //       action: 'project_created',
+  //       action_display: 'Projeto criado',
+  //       target: 'Sistema de Gestão MICLA',
+  //       description: 'Projeto criado com sucesso',
+  //       created_at: '2024-01-15T10:00:00Z',
+  //       timestamp: '2024-01-15T10:00:00Z',
+  //       details: { project_id: this.projectId }
+  //     }
+  //   ];
+
+  //   this.isLoading = false;
+  // }
 
   getStatusColor(status: string): string {
     return this.projectsService.getStatusColor(status);
