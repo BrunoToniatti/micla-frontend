@@ -15,12 +15,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { ProjectsService, Project } from '../../services/projects.service';
+import { ConfirmDeleteDialogComponent, ConfirmDeleteData } from './dialogs/confirm-delete-dialog.component';
 
 @Component({
   selector: 'app-projects',
@@ -40,6 +41,7 @@ import { ProjectsService, Project } from '../../services/projects.service';
     MatProgressSpinnerModule,
     MatMenuModule,
     MatDialogModule,
+    MatSnackBarModule,
     FormsModule,
   ],
   templateUrl: './projects.component.html',
@@ -72,7 +74,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private projectsService: ProjectsService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.setupFilterPredicate();
   }
@@ -142,12 +145,55 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteProject(project: Project): void {
-    if (confirm(`Tem certeza que deseja excluir o projeto "${project.name}"?`)) {
-      // Simular exclusão hardcoded
-      this.projects = this.projects.filter(p => p.id !== project.id);
-      this.dataSource.data = this.projects;
-      this.showSnackBar('Projeto excluído com sucesso!', 'success');
-    }
+    const dialogData: ConfirmDeleteData = {
+      title: 'Confirmar Exclusão',
+      message: 'Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita.',
+      itemName: project.name,
+      confirmText: 'Excluir Projeto',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      width: '500px',
+      data: dialogData,
+      disableClose: true,
+      panelClass: 'confirm-delete-dialog-container'
+    });
+
+    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe(result => {
+      if (result) {
+        this.deleteProject(project);
+      }
+    });
+  }
+
+  private deleteProject(project: Project): void {
+    this.isLoading = true;
+
+    this.projectsService.deleteProject(project.id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: () => {
+        // Remove o projeto da lista local
+        this.projects = this.projects.filter(p => p.id !== project.id);
+        this.dataSource.data = this.projects;
+
+        this.showSnackBar(
+          `Projeto "${project.name}" foi excluído com sucesso!`,
+          'success'
+        );
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao excluir projeto:', error);
+        this.showSnackBar(
+          'Erro ao excluir projeto. Tente novamente.',
+          'error'
+        );
+        this.isLoading = false;
+      }
+    });
   }
 
   formatDate(date: string): string {

@@ -144,6 +144,10 @@ export class ProjectsService {
     return this.http.post<Project>(`${this.baseUrl}`, project);
   }
 
+  deleteProject(projectId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${projectId}/`);
+  }
+
   // Helper methods for UI
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {

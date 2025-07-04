@@ -242,12 +242,52 @@ $green: #096e00;
     font-size: 0.85rem;
     color: white;
     border: none;
+    transition: all 0.3s ease;
+    cursor: default;
 
     mat-icon {
       font-size: 1rem;
       width: 1rem;
       height: 1rem;
     }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    // Animação de pulse para status ativos
+    &.status-active,
+    &.status-in-progress {
+      animation: statusPulse 2s ease-in-out infinite;
+    }
+  }
+
+  @keyframes statusPulse {
+    0%, 100% {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  // Estilos adicionais para melhor UX
+  .status-chip mat-icon {
+    animation: iconRotate 2s ease-in-out infinite;
+  }
+
+  @keyframes iconRotate {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+  }
+
+  // Parar animação quando não é status ativo
+  .status-completed mat-icon,
+  .status-cancelled mat-icon,
+  .status-on-hold mat-icon {
+    animation: none;
   }
 
   .green-chip {
@@ -263,6 +303,74 @@ $green: #096e00;
   .gray-chip {
     background: linear-gradient(135deg, gray, lighten(gray, 10%));
     box-shadow: 0 2px 8px rgba(128, 128, 128, 0.3);
+  }
+
+  // Status específicos dos projetos
+  .status-active {
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    color: white;
+  }
+
+  .status-in-progress {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    color: white;
+  }
+
+  .status-completed {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    color: white;
+  }
+
+  .status-on-hold {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+    color: white;
+  }
+
+  .status-cancelled {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+    color: white;
+  }
+
+  .status-planning {
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
+    color: white;
+  }
+
+  .status-default {
+    background: linear-gradient(135deg, #607d8b, #455a64);
+    box-shadow: 0 2px 8px rgba(96, 125, 139, 0.3);
+    color: white;
+  }
+
+  // Prioridades dos projetos
+  .priority-high {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+    color: white;
+  }
+
+  .priority-medium {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+    color: white;
+  }
+
+  .priority-low {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    color: white;
+  }
+
+  .priority-default {
+    background: linear-gradient(135deg, #607d8b, #455a64);
+    box-shadow: 0 2px 8px rgba(96, 125, 139, 0.3);
+    color: white;
   }
 
   .action-buttons-table {
@@ -416,4 +524,48 @@ $green: #096e00;
 // Smooth scrolling
 html {
   scroll-behavior: smooth;
+}
+
+// Dialog de confirmação de exclusão
+::ng-deep .confirm-delete-dialog-container {
+  .mat-mdc-dialog-container {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 0 !important;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 0 !important;
+  }
+}
+
+// Animação de entrada do dialog
+::ng-deep .confirm-delete-dialog-container .mat-mdc-dialog-container {
+  animation: dialogSlideIn 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+@keyframes dialogSlideIn {
+  from {
+    transform: scale(0.8) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+// Estilos para snackbar
+::ng-deep .snack-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+::ng-deep .snack-error {
+  background-color: #f44336;
+  color: white;
 }
