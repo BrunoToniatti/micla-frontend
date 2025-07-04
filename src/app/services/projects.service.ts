@@ -148,6 +148,14 @@ export class ProjectsService {
     return this.http.delete<void>(`${this.baseUrl}${projectId}/`);
   }
 
+  getProjectById(projectId: number): Observable<Project> {
+    return this.http.get<Project>(`${this.baseUrl}${projectId}/`);
+  }
+
+  updateProject(projectId: number, project: Partial<Project>): Observable<Project> {
+    return this.http.put<Project>(`${this.baseUrl}${projectId}/`, project);
+  }
+
   // Helper methods for UI
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {

@@ -104,38 +104,41 @@ export class ProjectFormComponent implements OnInit {
       if (params['id']) {
         this.isEditMode = true;
         this.projectId = +params['id'];
-        // this.loadProject();
+        this.loadProject();
       }
     });
   }
 
-  // private loadProject(): void {
-  //   if (this.projectId) {
-  //     this.projectsService.getProject(this.projectId).subscribe({
-  //       next: (project) => {
-  //         this.populateForm(project);
-  //       },
-  //       error: (error) => {
-  //         console.error('Erro ao carregar projeto:', error);
-  //         this.showSnackBar('Erro ao carregar projeto!', 'error');
-  //         this.router.navigate(['/projects']);
-  //       }
-  //     });
-  //   }
-  // }
+  private loadProject(): void {
+    if (this.projectId) {
+      this.projectsService.getProjectById(this.projectId).subscribe({
+        next: (project) => {
+          this.populateForm(project);
+          this.projectForm.patchValue({
+            manager_id: project.manager?.id || ''
+          });
+        },
+        error: (error) => {
+          console.error('Erro ao carregar projeto:', error);
+          this.showSnackBar('Erro ao carregar projeto!', 'error');
+          this.router.navigate(['/projects']);
+        }
+      });
+    }
+  }
 
-  // private populateForm(project: Project): void {
-  //   this.projectForm.patchValue({
-  //     name: project.name,
-  //     description: project.description,
-  //     client: project.client,
-  //     status: project.status,
-  //     priority: project.priority,
-  //     start_date: project.start_date ? new Date(project.start_date) : '',
-  //     expected_end_date: project.expected_end_date ? new Date(project.expected_end_date) : '',
-  //     manager_id: project.manager_id || ''
-  //   });
-  // }
+  private populateForm(project: Project): void {
+    this.projectForm.patchValue({
+      name: project.name,
+      description: project.description,
+      client: project.client,
+      status: project.status,
+      priority: project.priority,
+      start_date: project.start_date ? new Date(project.start_date) : '',
+      expected_end_date: project.expected_end_date ? new Date(project.expected_end_date) : '',
+      manager_id: project.manager_id || ''
+    });
+  }
 
   private loadAvailableUsers(): void {
     /* Esse método pega apenas os usuários que são gerentes dentro do projeto **/
@@ -145,7 +148,6 @@ export class ProjectFormComponent implements OnInit {
       )
     ).subscribe({
       next: (filteredUsers: any) => {
-        console.log(filteredUsers);
         this.availableUsers = filteredUsers;
       },
       error: (error) => {
@@ -167,18 +169,33 @@ export class ProjectFormComponent implements OnInit {
         this.showSnackBar('Erro ao criar projeto!', 'error');
       }
     })
+  }
 
+  updateProject(data: Partial<Project>): void {
+    if (this.projectId) {
+      this.projectsService.updateProject(this.projectId, data).subscribe({
+        next: (project) => {
+          this.isSubmitting = false;
+          this.showSnackBar('Projeto atualizado com sucesso!', 'success');
+          this.router.navigate(['/projects', project.id]);
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          console.error('Erro ao atualizar projeto:', error);
+          this.showSnackBar('Erro ao atualizar projeto!', 'error');
+        }
+      });
+    }
   }
 
   onSubmit(): void {
-    console.log('Form Value:', this.projectForm.value);
     if (this.projectForm.valid) {
       this.isSubmitting = true;
 
       const formData = this.prepareFormData();
 
       if (this.isEditMode && this.projectId) {
-        console.log('Atualizando projeto:', formData);
+        this.updateProject(formData);
       } else {
         this.createProject(formData);
       }
