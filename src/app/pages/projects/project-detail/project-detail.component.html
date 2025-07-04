@@ -78,24 +78,30 @@
   <div class="project-overview" [@fadeIn]>
     <div class="tags-section">
       <div class="section-header">
-        <h3>Tags</h3>
+        <h3>
+          <mat-icon>local_offer</mat-icon>
+          Tags
+        </h3>
         <button mat-mini-fab color="primary" (click)="onAddTag()" title="Adicionar tag">
           <mat-icon>add</mat-icon>
         </button>
       </div>
       <div class="tags-container">
-        <mat-chip *ngFor="let tag of project.tags" class="tag-chip" [style.background-color]="tag.color">
-          {{tag.name}}
+        <div class="tag-chip" *ngFor="let tag of project.tags" [style.background-color]="tag.color">
+          <span>{{tag.name}}</span>
           <button mat-icon-button class="remove-tag" (click)="onRemoveTag(tag.id)" title="Remover tag">
             <mat-icon>close</mat-icon>
           </button>
-        </mat-chip>
+        </div>
       </div>
     </div>
 
     <div class="team-section">
       <div class="section-header">
-        <h3>Equipe</h3>
+        <h3>
+          <mat-icon>group</mat-icon>
+          Equipe
+        </h3>
         <button mat-mini-fab color="primary" (click)="onAddTeamMember()" title="Adicionar membro">
           <mat-icon>person_add</mat-icon>
         </button>
@@ -106,7 +112,7 @@
             <div class="avatar">{{member.user.first_name.charAt(0)}}{{member.user.last_name.charAt(0)}}</div>
             <span class="member-name">{{member.user.full_name}}</span>
           </div>
-          <button mat-icon-button class="remove-member" (click)="onRemoveTeamMember(member.id)" title="Remover membro">
+          <button mat-button class="remove-member" (click)="onRemoveTeamMember(member.id)" title="Remover membro">
             <mat-icon>close</mat-icon>
           </button>
         </div>

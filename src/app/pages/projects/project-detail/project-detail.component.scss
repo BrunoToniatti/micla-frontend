@@ -131,7 +131,7 @@
   }
 }
 
-// Overview (Tags e Equipe)
+
 .project-overview {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -159,6 +159,13 @@
         display: flex;
         align-items: center;
         gap: 8px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: $text-color;
+        }
       }
 
       button {
@@ -175,26 +182,32 @@
     gap: 8px;
 
     .tag-chip {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: white !important;
-      border-radius: 16px !important;
-      font-size: 0.8rem;
-      padding: 8px 12px 8px 16px !important;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      padding: 6px 4px 6px 12px;
       font-weight: 500;
-      border: none !important;
-      position: relative;
+      border: none;
       cursor: pointer;
       transition: all 0.2s ease;
+      height: auto;
+      min-height: 32px;
 
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
 
+      span {
+        color: white;
+        font-size: 0.85rem;
+      }
+
       .remove-tag {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.2) !important;
         border: none;
         border-radius: 50%;
         width: 20px;
@@ -205,10 +218,11 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s ease;
-        margin-left: 8px;
+        margin-left: 4px;
+        padding: 0;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.4);
+          background: rgba(255, 255, 255, 0.4) !important;
           transform: scale(1.1);
         }
 
@@ -271,28 +285,33 @@
       }
 
       .remove-member {
-        opacity: 0;
+        opacity: 1 !important;
         transition: all 0.2s ease;
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-        background: #f44336;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        min-height: 28px !important;
+        background: #f44336 !important;
+        color: white !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        border: none !important;
+        line-height: 1 !important;
 
         &:hover {
-          background: #d32f2f;
+          background: #d32f2f !important;
           transform: scale(1.1);
         }
 
         mat-icon {
-          font-size: 16px;
-          width: 16px;
-          height: 16px;
-          color: white;
+          font-size: 16px !important;
+          width: 16px !important;
+          height: 16px !important;
+          color: white !important;
+          line-height: 16px !important;
         }
       }
 
@@ -301,6 +320,25 @@
       }
     }
   }
+}
+
+// Força a exibição dos ícones dos membros da equipe
+.team-section .team-member .remove-member {
+  opacity: 1 !important;
+
+  mat-icon {
+    display: block !important;
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: white !important;
+    line-height: 16px !important;
+  }
+}
+
+// Força a exibição dos ícones no hover
+.team-section .team-member:hover .remove-member {
+  opacity: 1 !important;
 }
 
 // Tabs
