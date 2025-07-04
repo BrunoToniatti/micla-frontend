@@ -1,15 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
-export interface User{
+export interface Role {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface User {
   first_name: string;
   last_name: string;
   password: string;
   token: string;
+  profile?: {
+    role: Role;
+  };
 }
 
-export interface Invite{
+export interface Invite {
   email: string,
   role: number
 }
@@ -29,25 +39,25 @@ export class UsersService {
 
   activateUrl = environment.apiUrl + 'accounts/activate/';
 
-  getUsers() {
-    return this.http.get(`${this.apiUrl}`)
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}`)
   }
-  createUser(user: User){
+  createUser(user: User) {
     return this.http.post(`${this.activateUrl}`, user)
   }
 
-  deleteUser(id: number){
+  deleteUser(id: number) {
     return this.http.delete(`${this.apiUrl}${id}/`);
   }
 
-  getInvites(){
+  getInvites() {
     return this.http.get(`${this.inviteUrl}`)
   }
-  createInvite(invite: Invite){
+  createInvite(invite: Invite) {
     return this.http.post(`${this.inviteUrl}`, invite);
   }
 
-  deleteInvite(id: number){
+  deleteInvite(id: number) {
     return this.http.delete(`${this.inviteUrl}${id}/`);
   }
 

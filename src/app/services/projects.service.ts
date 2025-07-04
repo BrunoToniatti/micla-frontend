@@ -63,6 +63,7 @@ export interface Task {
   name?: string;
   description: string;
   status: string;
+  status_display?: string;
   priority: string;
   assigned_to: User | null;
   created_at: string;
@@ -131,12 +132,16 @@ export interface ActivityLog {
   providedIn: 'root'
 })
 export class ProjectsService {
-  private baseUrl = 'http://localhost:8000/api/projects'; // URL original
+  private baseUrl = 'http://localhost:8000/api/projects/'; // URL original
 
   constructor(private http: HttpClient) {}
 
   getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.baseUrl}/list/`);
+    return this.http.get<Project[]>(`${this.baseUrl}`);
+  }
+
+  createProject(project: Partial<Project>): Observable<Project>{
+    return this.http.post<Project>(`${this.baseUrl}`, project);
   }
 
   // Helper methods for UI

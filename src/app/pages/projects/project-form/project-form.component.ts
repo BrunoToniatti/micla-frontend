@@ -16,6 +16,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 
 import { ProjectsService, Project, User } from '../../../services/projects.service';
 import { UsersService } from '../../../services/users.service';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-project-form',
@@ -123,57 +124,63 @@ export class ProjectFormComponent implements OnInit {
   //   }
   // }
 
-  private populateForm(project: Project): void {
-    this.projectForm.patchValue({
-      name: project.name,
-      description: project.description,
-      client: project.client,
-      status: project.status,
-      priority: project.priority,
-      start_date: project.start_date ? new Date(project.start_date) : '',
-      expected_end_date: project.expected_end_date ? new Date(project.expected_end_date) : '',
-      manager_id: project.manager_id || ''
+  // private populateForm(project: Project): void {
+  //   this.projectForm.patchValue({
+  //     name: project.name,
+  //     description: project.description,
+  //     client: project.client,
+  //     status: project.status,
+  //     priority: project.priority,
+  //     start_date: project.start_date ? new Date(project.start_date) : '',
+  //     expected_end_date: project.expected_end_date ? new Date(project.expected_end_date) : '',
+  //     manager_id: project.manager_id || ''
+  //   });
+  // }
+
+  private loadAvailableUsers(): void {
+    /* Esse método pega apenas os usuários que são gerentes dentro do projeto **/
+    this.usersService.getUsers().pipe(
+      map(users =>
+        users.filter(user => user.profile?.role?.name == 'Gerente')
+      )
+    ).subscribe({
+      next: (filteredUsers: any) => {
+        console.log(filteredUsers);
+        this.availableUsers = filteredUsers;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar usuários:', error);
+      }
     });
   }
 
-  private loadAvailableUsers(): void {
-    // Simular carregamento de usuários - substitua pela implementação real
-    try {
-      this.usersService.getUsers().subscribe({
-        next: (users: any) => {
-          this.availableUsers = users;
-        },
-        error: (error) => {
-          console.error('Erro ao carregar usuários:', error);
-          // Dados mock para demonstração
-          this.availableUsers = [
-            { id: 1, username: 'admin', first_name: 'Admin', last_name: 'Sistema', email: 'admin@example.com', full_name: 'Admin Sistema' },
-            { id: 2, username: 'joao', first_name: 'João', last_name: 'Silva', email: 'joao@example.com', full_name: 'João Silva' },
-            { id: 3, username: 'maria', first_name: 'Maria', last_name: 'Santos', email: 'maria@example.com', full_name: 'Maria Santos' }
-          ];
-        }
-      });
-    } catch (error) {
-      console.error('Erro ao carregar usuários:', error);
-      // Dados mock para demonstração
-      this.availableUsers = [
-        { id: 1, username: 'admin', first_name: 'Admin', last_name: 'Sistema', email: 'admin@example.com', full_name: 'Admin Sistema' },
-        { id: 2, username: 'joao', first_name: 'João', last_name: 'Silva', email: 'joao@example.com', full_name: 'João Silva' },
-        { id: 3, username: 'maria', first_name: 'Maria', last_name: 'Santos', email: 'maria@example.com', full_name: 'Maria Santos' }
-      ];
-    }
+  createProject(data: Partial<Project>): void {
+    this.projectsService.createProject(data).subscribe({
+      next: (project) => {
+        this.isSubmitting = false;
+        this.showSnackBar('Projeto criado com sucesso!', 'success');
+        this.router.navigate(['/projects', project.id]);
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        console.error('Erro ao criar projeto:', error);
+        this.showSnackBar('Erro ao criar projeto!', 'error');
+      }
+    })
+
   }
 
   onSubmit(): void {
+    console.log('Form Value:', this.projectForm.value);
     if (this.projectForm.valid) {
       this.isSubmitting = true;
 
       const formData = this.prepareFormData();
 
       if (this.isEditMode && this.projectId) {
-        // this.updateProject(formData);
+        console.log('Atualizando projeto:', formData);
       } else {
-        // this.createProject(formData);
+        this.createProject(formData);
       }
     } else {
       this.markFormGroupTouched();

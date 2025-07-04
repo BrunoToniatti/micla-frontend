@@ -155,7 +155,6 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Selecionar Gerente</mat-label>
               <mat-select formControlName="manager_id">
-                <mat-option>Nenhum gerente selecionado</mat-option>
                 <mat-option *ngFor="let user of availableUsers" [value]="user.id">
                   {{user.full_name || user.username}} - {{user.email}}
                 </mat-option>

@@ -145,6 +145,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       name: 'Sistema de Gestão MICLA',
       description: 'Desenvolvimento completo de sistema de gestão de projetos para a empresa MICLA Engineering & Design',
       status: 'in_progress',
+      status_display: 'Em Andamento',
       priority: 'high',
       start_date: '2024-01-15',
       expected_end_date: '2024-06-30',
@@ -508,10 +509,6 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   getPriorityColor(priority: string): string {
     return this.projectsService.getPriorityColor(priority);
-  }
-
-  getStatusDisplayName(status: string): string {
-    return this.projectsService.getStatusDisplayName(status);
   }
 
   getPriorityDisplayName(priority: string): string {
