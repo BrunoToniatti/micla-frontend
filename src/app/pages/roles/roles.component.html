@@ -1,59 +1,171 @@
-<div class="roles-table">
-  <div class="message">
-    <div class="text" [class.visible]="message">
-      <mat-icon>check</mat-icon>
-      <span>{{ message }}</span>
+<div class="roles-wrapper" [@fadeIn]>
+
+  <!-- Loading inicial -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando cargos...</p>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div *ngIf="!isLoading">
+    <!-- Header da página -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <mat-icon>work</mat-icon>
+        Gerenciamento de Cargos
+      </h1>
+      <p class="page-subtitle">Gerencie os cargos e responsabilidades da sua organização</p>
+    </div>
+
+    <!-- Mensagem de sucesso -->
+    <div class="message" *ngIf="message" [@messageAnimation]>
+      <div class="text">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ message }}</span>
+      </div>
+    </div>
+
+    <!-- Botão adicionar cargo -->
+    <div class="btnNew" [@slideIn]>
+      <button mat-raised-button color="primary" (click)="toogleForm()" class="add-role-btn">
+        <mat-icon>{{showForm ? 'close' : 'add'}}</mat-icon>
+        {{showForm ? 'Cancelar' : 'Novo Cargo'}}
+      </button>
+    </div>
+
+    <!-- Formulário -->
+    <mat-card *ngIf="showForm" class="form-card" [@slideIn]>
+      <mat-card-content>
+        <div class="form">
+          <h3 class="form-title">
+            <mat-icon>{{editing ? 'edit' : 'add'}}</mat-icon>
+            {{editing ? 'Editar Cargo' : 'Novo Cargo'}}
+          </h3>
+
+          <div class="form-group">
+            <label>Nome do cargo</label>
+            <input type="text" [(ngModel)]="newRole.name" placeholder="Digite o nome do cargo" />
+          </div>
+
+          <div class="form-group">
+            <label>Descrição do cargo</label>
+            <textarea [(ngModel)]="newRole.description" placeholder="Descreva as responsabilidades do cargo" rows="3"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button (click)="toogleForm()" class="cancel-btn">
+              <mat-icon>close</mat-icon>
+              Cancelar
+            </button>
+            <button mat-raised-button color="primary" (click)="save(editing ? newRole.id : 0)" class="save-btn">
+              <mat-icon>{{editing ? 'save' : 'add'}}</mat-icon>
+              {{editing ? 'Salvar Alterações' : 'Adicionar Cargo'}}
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Tabela de cargos -->
+    <div *ngIf="!showForm" class="table-container" [@fadeIn]>
+      <mat-card class="data-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>work</mat-icon>
+            Lista de Cargos
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="isLoadingRoles" class="loading-table">
+            <mat-spinner diameter="30"></mat-spinner>
+            <p>Carregando cargos...</p>
+          </div>
+
+          <div *ngIf="!isLoadingRoles" class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>
+                    <mat-icon>badge</mat-icon>
+                    Nome
+                  </th>
+                  <th>
+                    <mat-icon>description</mat-icon>
+                    Descrição
+                  </th>
+                  <th>
+                    <mat-icon>settings</mat-icon>
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let role of roles" class="table-row">
+                  <td data-label="Nome">
+                    <div class="role-name">
+                      <strong>{{ role.name }}</strong>
+                    </div>
+                  </td>
+                  <td data-label="Descrição">
+                    <div class="role-description">
+                      {{ role.description }}
+                    </div>
+                  </td>
+                  <td data-label="Ações">
+                    <div class="action-buttons">
+                      <button
+                        mat-icon-button
+                        color="accent"
+                        matTooltip="Visualizar cargo"
+                        (click)="onViewRole(role)"
+                        class="action-btn view-btn"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        matTooltip="Editar cargo"
+                        (click)="onEditRole(role)"
+                        class="action-btn edit-btn"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        color="warn"
+                        matTooltip="Excluir cargo"
+                        (click)="onDeleteRole(role)"
+                        class="action-btn delete-btn"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mensagem quando não há dados -->
+          <div *ngIf="!isLoadingRoles && roles.length === 0" class="no-data-container">
+            <div class="no-data-content">
+              <mat-icon class="no-data-icon">inbox</mat-icon>
+              <h3>Nenhum cargo encontrado</h3>
+              <p>Comece criando o primeiro cargo da sua organização.</p>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="toogleForm()"
+                class="create-first-role-btn"
+              >
+                <mat-icon>add</mat-icon>
+                Criar Primeiro Cargo
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
-  <div class="btnNew">
-    <button (click)="toogleForm()">
-      <mat-icon>@if(!showForm){add}@else{list}</mat-icon>
-      @if(!showForm){Novo Cargo}@else{Listar Cargos}
-    </button>
-  </div>
-  <!-- Form de cargo -->
-  <div class="form" *ngIf="showForm">
-
-    <label>Nome do cargo</label>
-    <input matInput [(ngModel)]="newRole.name" />
-
-    <label>Descrição do cargo</label>
-    <input matInput [(ngModel)]="newRole.description" />
-    @if(editing){
-    <button (click)="save(newRole.id)">Salvar cargo</button>
-    }@else {
-      <button (click)="save()">Adicionar cargo</button>
-    }
-  </div>
-  <!-- Tabela de cargos -->
-  <table *ngIf="!showForm">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Descrição</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let role of roles">
-        <td>{{ role.name }}</td>
-        <td>{{ role.description }}</td>
-        <td> <button class="Btn edit" (click)="edit(role)">Editar
-            <svg class="svg" viewBox="0 0 512 512">
-              <path
-                d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
-              </path>
-            </svg>
-          </button>
-        </td>
-        <td> <button class="Btn delete" (click)="deleteRole(role.id)">Excluir
-            <svg xmlns="http://www.w3.org/2000/svg" class="svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
-              <path
-                d="M9 3V4H4V6H5V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V6H20V4H15V3H9ZM7 6H17V20H7V6ZM9 8V18H11V8H9ZM13 8V18H15V8H13Z" />
-            </svg>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

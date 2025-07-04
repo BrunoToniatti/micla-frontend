@@ -1,26 +1,220 @@
 <div class="activation-form">
-  <div class="card">
-    <h1>Bem-vindo ao sistema!</h1>
-    <p>Complete seu cadastro para ativar seu acesso.</p>
+  <div class="wave-container">
+    <div class="wave"></div>
+    <div class="wave wave2"></div>
+  </div>
 
-    <label>Nome</label>
-    <input type="text" [(ngModel)]="user.firstName" placeholder="Digite seu nome" />
+  <!-- Card de Sucesso -->
+  <div class="success-card" *ngIf="success" @successMessage>
+    <div class="checkmark-container">
+      <svg class="checkmark" @checkmark xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+    <h2>Bem-vindo!</h2>
+    <p>Seu cadastro foi realizado com sucesso.</p>
+    <p class="redirect-text">Redirecionando para o login...</p>
+  </div>
 
-    <label>Sobrenome</label>
-    <input type="text" [(ngModel)]="user.lastName" placeholder="Digite seu sobrenome" />
+  <!-- Formulário Principal -->
+  <div class="card" *ngIf="!success" [@formState]="formState" @fadeSlide>
+    <div class="header">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path>
+        </svg>
+      </div>
+      <h1 @fadeSlide>Bem-vindo ao sistema!</h1>
+      <p @fadeSlide>Complete seu cadastro para ativar seu acesso</p>
+    </div>
 
-    <label>Crie sua senha</label>
-    <input type="password" [(ngModel)]="user.password" (input)="checkPassword()" placeholder="Ex: MinhaSenha@123" />
+    <form @fadeSlide>
+      <!-- Campos de nome e sobrenome -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">Nome</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="firstName"
+              [(ngModel)]="user.firstName"
+              name="firstName"
+              placeholder="Digite seu nome"
+              autocomplete="given-name"
+              required />
+          </div>
+        </div>
 
-    <ul class="password-check">
-      <li [class.valid]="rules.upper">Letra maiúscula</li>
-      <li [class.valid]="rules.special">Caractere especial (&#64; # $ ...)</li>
-      <li [class.valid]="rules.number">Número</li>
-    </ul>
+        <div class="form-group">
+          <label for="lastName">Sobrenome</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="lastName"
+              [(ngModel)]="user.lastName"
+              name="lastName"
+              placeholder="Digite seu sobrenome"
+              autocomplete="family-name"
+              required />
+          </div>
+        </div>
+      </div>
 
-    <button [disabled]="loading" (click)="submit()">
-      <span *ngIf="!loading">Começar</span>
-      <span *ngIf="loading" class="loader"></span>
-    </button>
+      <!-- Campo de senha com medidor de força -->
+      <div class="form-group password-group">
+        <label for="password">Crie sua senha</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            [(ngModel)]="user.password"
+            name="password"
+            (input)="checkPassword()"
+            placeholder="Crie uma senha forte"
+            autocomplete="new-password"
+            required />
+          <span class="toggle-password" (click)="togglePasswordVisibility()">
+            <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </span>
+        </div>
+
+        <!-- Medidor de força da senha -->
+        <div class="password-strength">
+          <div class="strength-meter">
+            <div
+              class="meter-fill"
+              [style.width.%]="passwordStrength"
+              [ngClass]="getPasswordStrengthClass()">
+            </div>
+          </div>
+          <span class="strength-label" [ngClass]="getPasswordStrengthClass()">
+            {{passwordStrength === 0 ? '' :
+              passwordStrength <= 25 ? 'Fraca' :
+              passwordStrength <= 75 ? 'Média' : 'Forte'}}
+          </span>
+        </div>
+      </div>
+
+      <!-- Confirmação de senha -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirme sua senha</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            [(ngModel)]="user.confirmPassword"
+            name="confirmPassword"
+            (input)="checkPassword()"
+            placeholder="Confirme sua senha"
+            autocomplete="new-password"
+            required />
+          <span class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+            <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Requisitos de senha -->
+      <div class="password-requirements">
+        <h3>Requisitos de senha:</h3>
+        <ul class="password-check">
+          <li [class.valid]="rules.upper">
+            <span class="check-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Pelo menos uma letra maiúscula
+          </li>
+          <li [class.valid]="rules.special">
+            <span class="check-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Pelo menos um caractere especial (&#64;, #, $, etc.)
+          </li>
+          <li [class.valid]="rules.number">
+            <span class="check-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Pelo menos um número
+          </li>
+          <li [class.valid]="rules.length">
+            <span class="check-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Mínimo de 8 caracteres
+          </li>
+          <li [class.valid]="rules.match">
+            <span class="check-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            Senhas coincidem
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mensagem de feedback -->
+      <div class="message" *ngIf="message" @fadeSlide>
+        {{message}}
+      </div>
+
+      <!-- Botão de envio -->
+      <button
+        type="submit"
+        [disabled]="loading || !isFormValid()"
+        (click)="submit()"
+        class="submit-button"
+        [class.pulse]="isFormValid() && !loading">
+        <span class="button-content" *ngIf="!loading">Ativar minha conta</span>
+        <span class="loader" *ngIf="loading"></span>
+      </button>
+    </form>
   </div>
 </div>

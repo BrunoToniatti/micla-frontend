@@ -1,79 +1,239 @@
-<div class="users-wrapper">
+<div class="users-wrapper" [@fadeIn]>
 
-  <div class="message">
-    <div class="text" [class.visible]="message">
-      <mat-icon>check</mat-icon>
-      <span>{{ message }}</span>
-    </div>
+  <!-- Loading inicial -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando usuários...</p>
   </div>
 
-  <div class="btnNew">
-    <button (click)="toggleForm()">Adicionar usuário</button>
-  </div>
-
-  <div class="form" *ngIf="showForm">
-    <label>Email</label>
-    <input type="email" [(ngModel)]="newUser.email" />
-
-    <label>Cargo</label>
-    <select [(ngModel)]="newUser.role">
-      <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
-    </select>
-
-    <button (click)="addUser()">Salvar</button>
-  </div>
-
-  <div *ngIf="!showForm">
-    <div class="users-table" *ngIf="invites.length > 0">
-      <h1>Convites enviados</h1>
-      <br>
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Criado em</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let invite of invites">
-            <td>{{ invite.email }}</td>
-            <td>{{ invite.created_at | date:'dd/MM/yyyy HH:mm':'UTC' }}</td>
-            <td>
-              <button class="delete-btn" (click)="deleteInvite(invite.id)">
-                <mat-icon>delete</mat-icon>
-                Excluir
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <hr>
+  <!-- Conteúdo principal -->
+  <div *ngIf="!isLoading">
+    <!-- Header da página -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <mat-icon>people</mat-icon>
+        Gerenciamento de Usuários
+      </h1>
+      <p class="page-subtitle">Gerencie usuários e convites da sua equipe</p>
     </div>
 
+    <!-- Mensagem de sucesso -->
+    <div class="message" *ngIf="message" [@messageAnimation]>
+      <div class="text">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ message }}</span>
+      </div>
+    </div>
 
-    <div class="users-table">
-      <h1>Usuários ativos</h1>
-      <br>
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Nome de usuário</th>
-            <th>Email</th>
-            <th>Cargo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users">
-            <td>{{ user.first_name }} {{ user.last_name }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.profile.role.name }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Botão adicionar usuário -->
+    <div class="btnNew" [@slideIn]>
+      <button mat-raised-button color="primary" (click)="toggleForm()" class="add-user-btn">
+        <mat-icon>{{showForm ? 'close' : 'person_add'}}</mat-icon>
+        {{showForm ? 'Cancelar' : 'Adicionar Usuário'}}
+      </button>
+    </div>
+
+    <!-- Formulário -->
+    <mat-card *ngIf="showForm" class="form-card" [@slideIn]>
+      <mat-card-content>
+        <div class="form">
+          <h3 class="form-title">
+            <mat-icon>person_add</mat-icon>
+            Novo Usuário
+          </h3>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="newUser.email" placeholder="Digite o email do usuário" />
+          </div>
+
+          <div class="form-group">
+            <label>Cargo</label>
+            <select [(ngModel)]="newUser.role">
+              <option value="0">Selecione um cargo</option>
+              <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button (click)="toggleForm()" class="cancel-btn">
+              <mat-icon>close</mat-icon>
+              Cancelar
+            </button>
+            <button mat-raised-button color="primary" (click)="addUser()" class="save-btn">
+              <mat-icon>save</mat-icon>
+              Salvar
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Conteúdo das tabelas -->
+    <div *ngIf="!showForm" class="tables-container">
+      <!-- Tabela de convites -->
+      <div class="section" *ngIf="invites.length > 0" [@fadeIn]>
+        <mat-card class="data-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>mail_outline</mat-icon>
+              Convites Enviados
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="isLoadingInvites" class="loading-table">
+              <mat-spinner diameter="30"></mat-spinner>
+              <p>Carregando convites...</p>
+            </div>
+
+            <div *ngIf="!isLoadingInvites" class="table-responsive">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <mat-icon>email</mat-icon>
+                      Email
+                    </th>
+                    <th>
+                      <mat-icon>schedule</mat-icon>
+                      Criado em
+                    </th>
+                    <th>
+                      <mat-icon>settings</mat-icon>
+                      Ações
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let invite of invites" class="table-row">
+                    <td data-label="Email">{{ invite.email }}</td>
+                    <td data-label="Criado em">{{ invite.created_at | date:'dd/MM/yyyy HH:mm':'UTC' }}</td>
+                    <td data-label="Ações">
+                      <div class="action-buttons">
+                        <button
+                          mat-icon-button
+                          color="accent"
+                          matTooltip="Visualizar convite"
+                          (click)="onViewInvite(invite)"
+                          class="action-btn view-btn"
+                        >
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          color="primary"
+                          matTooltip="Editar convite"
+                          (click)="onEditInvite(invite)"
+                          class="action-btn edit-btn"
+                        >
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          matTooltip="Excluir convite"
+                          (click)="deleteInvite(invite.id)"
+                          class="action-btn delete-btn"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Tabela de usuários ativos -->
+      <div class="section" [@fadeIn]>
+        <mat-card class="data-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>people</mat-icon>
+              Usuários Ativos
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="isLoadingUsers" class="loading-table">
+              <mat-spinner diameter="30"></mat-spinner>
+              <p>Carregando usuários...</p>
+            </div>
+
+            <div *ngIf="!isLoadingUsers" class="table-responsive">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <mat-icon>person</mat-icon>
+                      Nome
+                    </th>
+                    <th>
+                      <mat-icon>account_circle</mat-icon>
+                      Nome de usuário
+                    </th>
+                    <th>
+                      <mat-icon>email</mat-icon>
+                      Email
+                    </th>
+                    <th>
+                      <mat-icon>work</mat-icon>
+                      Cargo
+                    </th>
+                    <th>
+                      <mat-icon>settings</mat-icon>
+                      Ações
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users" class="table-row">
+                    <td data-label="Nome">{{ user.first_name }} {{ user.last_name }}</td>
+                    <td data-label="Nome de usuário">{{ user.username }}</td>
+                    <td data-label="Email">{{ user.email }}</td>
+                    <td data-label="Cargo">
+                      <span class="role-badge">{{ user.profile.role.name }}</span>
+                    </td>
+                    <td data-label="Ações">
+                      <div class="action-buttons">
+                        <button
+                          mat-icon-button
+                          color="accent"
+                          matTooltip="Visualizar usuário"
+                          (click)="onViewUser(user)"
+                          class="action-btn view-btn"
+                        >
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          color="primary"
+                          matTooltip="Editar usuário"
+                          (click)="onEditUser(user)"
+                          class="action-btn edit-btn"
+                        >
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          matTooltip="Excluir usuário"
+                          (click)="onDeleteUser(user.id)"
+                          class="action-btn delete-btn"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
   </div>
 </div>

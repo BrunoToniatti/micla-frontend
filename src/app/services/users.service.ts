@@ -36,6 +36,10 @@ export class UsersService {
     return this.http.post(`${this.activateUrl}`, user)
   }
 
+  deleteUser(id: number){
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
+
   getInvites(){
     return this.http.get(`${this.inviteUrl}`)
   }

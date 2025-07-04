@@ -1,45 +1,109 @@
 <mat-sidenav-container class="layout-container">
-  <mat-sidenav #drawer class="sidenav" mode="over" [opened]="false">
-    <div class="logo">MICLA</div>
-    <nav class="menu">
-      <!-- <a *ngIf="hasPermission('ADMIN')" mat-list-item routerLink="/painel" routerLinkActive="active">
-        Painel
-      </a> -->
-      <div class="submenu" *ngIf="hasPermission('ADMIN')">
-        <span class="submenu-title" >Administrador</span>
-        <div class="itens">
-          <a  mat-list-item routerLink="/roles" routerLinkActive="active">
-            Cargos
-          </a>
-          <a mat-list-item routerLink="/users" routerLinkActive="active">
-            Usuários
-          </a>
+  <mat-sidenav #drawer class="sidenav" [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile">
+    <div class="sidenav-header" @slideIn>
+      <div class="logo-container">
+        <div class="logo-icon">
+          <mat-icon>engineering</mat-icon>
+        </div>
+        <div class="logo-text">
+          <span class="brand-name">MICLA</span>
+          <span class="brand-subtitle">Engineering & Design</span>
         </div>
       </div>
+    </div>
 
-      <div class="submenu">
-        <span class="submenu-title">Serviços</span>
-        <div class="itens">
-          <a mat-list-item routerLink="/projects" routerLinkActive="active">
-            Projetos
-          </a>
-          <a mat-list-item routerLink="/categories" routerLinkActive="active">
-            Categorias
+    <div class="sidenav-content">
+      <nav class="navigation-menu">
+        <!-- Dashboard -->
+        <div class="menu-item" @fadeIn>
+          <a routerLink="/painel" routerLinkActive="active" class="menu-link" (click)="closeSidenavIfMobile(drawer)">
+            <mat-icon class="menu-icon">dashboard</mat-icon>
+            <span class="menu-text">Dashboard</span>
           </a>
         </div>
+
+        <!-- Administrador -->
+        <div class="menu-section" *ngIf="hasPermission('ADMIN')" @fadeIn>
+          <div class="section-header" (click)="toggleSubmenu('admin')">
+            <div class="section-title">
+              <mat-icon class="section-icon">admin_panel_settings</mat-icon>
+              <span>Administrador</span>
+            </div>
+            <mat-icon class="expand-icon" [class.expanded]="isSubmenuExpanded('admin')">
+              expand_more
+            </mat-icon>
+          </div>
+
+          <div class="submenu-items" [class.expanded]="isSubmenuExpanded('admin')">
+            <a routerLink="/roles" routerLinkActive="active" class="submenu-link" (click)="closeSidenavIfMobile(drawer)">
+              <mat-icon class="submenu-icon">work</mat-icon>
+              <span>Cargos</span>
+            </a>
+            <a routerLink="/users" routerLinkActive="active" class="submenu-link" (click)="closeSidenavIfMobile(drawer)">
+              <mat-icon class="submenu-icon">people</mat-icon>
+              <span>Usuários</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Serviços -->
+        <div class="menu-section" @fadeIn>
+          <div class="section-header" (click)="toggleSubmenu('services')">
+            <div class="section-title">
+              <mat-icon class="section-icon">business_center</mat-icon>
+              <span>Serviços</span>
+            </div>
+            <mat-icon class="expand-icon" [class.expanded]="isSubmenuExpanded('services')">
+              expand_more
+            </mat-icon>
+          </div>
+
+          <div class="submenu-items" [class.expanded]="isSubmenuExpanded('services')">
+            <a routerLink="/projects" routerLinkActive="active" class="submenu-link" (click)="closeSidenavIfMobile(drawer)">
+              <mat-icon class="submenu-icon">folder</mat-icon>
+              <span>Projetos</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="sidenav-footer">
+        <div class="user-info">
+          <mat-icon class="user-avatar">account_circle</mat-icon>
+          <div class="user-details">
+            <span class="user-name">Usuário</span>
+            <span class="user-role">Administrador</span>
+          </div>
+        </div>
+        <button mat-icon-button class="logout-btn" title="Sair">
+          <mat-icon>logout</mat-icon>
+        </button>
       </div>
-    </nav>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
-    <mat-toolbar color="primary" class="toolbar">
-      <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
+    <mat-toolbar class="toolbar" [class.mobile]="isMobile">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-toggle">
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="toolbar-title">Painel Administrativo</span>
+
+      <div class="toolbar-content">
+        <span class="toolbar-title">Painel Administrativo</span>
+
+        <div class="toolbar-actions">
+          <button mat-icon-button class="action-btn" title="Notificações">
+            <mat-icon>notifications</mat-icon>
+            <span class="notification-badge">3</span>
+          </button>
+          <button mat-icon-button class="action-btn" title="Perfil">
+            <mat-icon>account_circle</mat-icon>
+          </button>
+        </div>
+      </div>
     </mat-toolbar>
 
-    <main class="content">
+    <main class="content-area">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

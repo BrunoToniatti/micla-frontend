@@ -2,8 +2,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service'; // ajusta o path se for diferente
+import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
@@ -12,13 +16,34 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fadeSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('shake', [
+      transition('* => shake', [
+        animate('300ms', style({ transform: 'translateX(-10px)' })),
+        animate('300ms', style({ transform: 'translateX(10px)' })),
+        animate('300ms', style({ transform: 'translateX(0)' }))
+      ])
+    ])
+  ]
 })
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage = '';
+  isLoading = false;
+  showPassword = false;
+  shakeState = '';
 
   constructor(
     private fb: FormBuilder,
@@ -32,9 +57,18 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
-    if (this.loginForm.invalid) return;
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      this.triggerShake();
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
     const payload = this.loginForm.value;
 
     this.http.post<any>('http://localhost:8000/api/token/', payload).subscribe({
@@ -49,9 +83,16 @@ export class LoginComponent {
 
         this.router.navigate(['/painel']);
       },
-      error: () => {
-        this.errorMessage = 'Login inválido. Tente novamente.';
-      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = 'Usuário ou senha incorretos';
+        this.triggerShake();
+      }
     });
+  }
+
+  private triggerShake() {
+    this.shakeState = 'shake';
+    setTimeout(() => this.shakeState = '', 900);
   }
 }
