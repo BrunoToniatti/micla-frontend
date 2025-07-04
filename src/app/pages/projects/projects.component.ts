@@ -72,7 +72,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private projectsService: ProjectsService,
     private router: Router,
-    private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
     this.setupFilterPredicate();
@@ -80,6 +79,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadProjects();
+    this.getProjects();
   }
 
   ngOnDestroy(): void {
@@ -93,79 +93,26 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return (
         data.name.toLowerCase().includes(val) ||
         (data.client?.toLowerCase().includes(val) || false) ||
-        this.projectsService.getStatusDisplayName(data.status).toLowerCase().includes(val) ||
+        (data.status_display).toLowerCase().includes(val) ||
         data.start_date.includes(val) ||
         (data.expected_end_date?.includes(val) || false)
       );
     };
   }
 
+  getProjects(){
+    this.projectsService.getProjects().subscribe({
+      next: (projects: Project[]) => {
+        this.projects = projects;
+        this.dataSource.data = this.projects;
+      }
+    })
+  }
+
+  // Simular carregamento
   private loadProjects(): void {
     this.isLoading = true;
-
-    // Dados hardcoded - 5 projetos fictícios
-    const hardcodedProjects: Project[] = [
-      {
-        id: 1,
-        name: 'Sistema de Gestão MICLA',
-        description: 'Desenvolvimento completo de sistema de gestão de projetos',
-        client: 'MICLA Engineering',
-        status: 'in_progress',
-        priority: 'high',
-        start_date: '2024-01-15',
-        expected_end_date: '2024-06-30',
-        progress: 75
-      },
-      {
-        id: 2,
-        name: 'Website Corporativo Premium',
-        description: 'Criação de website responsivo com design moderno',
-        client: 'TechCorp Solutions',
-        status: 'completed',
-        priority: 'medium',
-        start_date: '2024-02-01',
-        expected_end_date: '2024-04-30',
-        progress: 100
-      },
-      {
-        id: 3,
-        name: 'App Mobile E-Commerce',
-        description: 'Desenvolvimento de aplicativo mobile para vendas online',
-        client: 'Retail Plus',
-        status: 'planning',
-        priority: 'high',
-        start_date: '2024-03-01',
-        expected_end_date: '2024-08-15',
-        progress: 15
-      },
-      {
-        id: 4,
-        name: 'Sistema de Controle de Estoque',
-        description: 'Automatização completa do controle de inventário',
-        client: 'Warehouse Solutions',
-        status: 'on_hold',
-        priority: 'low',
-        start_date: '2024-01-20',
-        expected_end_date: '2024-05-20',
-        progress: 40
-      },
-      {
-        id: 5,
-        name: 'Plataforma de Ensino Online',
-        description: 'Portal educacional com recursos interativos',
-        client: 'EduTech Institute',
-        status: 'in_progress',
-        priority: 'medium',
-        start_date: '2024-02-15',
-        expected_end_date: '2024-07-30',
-        progress: 60
-      }
-    ];
-
-    // Simular carregamento
     setTimeout(() => {
-      this.projects = hardcodedProjects;
-      this.dataSource.data = hardcodedProjects;
       this.isLoading = false;
     }, 1000);
   }
@@ -176,10 +123,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   getChipColor(status: string): string {
     return this.projectsService.getStatusColor(status);
-  }
-
-  getStatusDisplayName(status: string): string {
-    return this.projectsService.getStatusDisplayName(status);
   }
 
   getPriorityDisplayName(priority: string): string {

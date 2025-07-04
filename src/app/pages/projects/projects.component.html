@@ -90,7 +90,7 @@
                   <mat-icon *ngIf="project.status === 'completed'">check_circle</mat-icon>
                   <mat-icon *ngIf="project.status === 'planning'">schedule</mat-icon>
                   <mat-icon *ngIf="project.status === 'cancelled'">cancel</mat-icon>
-                  {{ getStatusDisplayName(project.status) }}
+                  {{ project.status_display }}
                 </mat-chip>
               </td>
             </ng-container>

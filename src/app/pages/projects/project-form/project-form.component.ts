@@ -103,25 +103,25 @@ export class ProjectFormComponent implements OnInit {
       if (params['id']) {
         this.isEditMode = true;
         this.projectId = +params['id'];
-        this.loadProject();
+        // this.loadProject();
       }
     });
   }
 
-  private loadProject(): void {
-    if (this.projectId) {
-      this.projectsService.getProject(this.projectId).subscribe({
-        next: (project) => {
-          this.populateForm(project);
-        },
-        error: (error) => {
-          console.error('Erro ao carregar projeto:', error);
-          this.showSnackBar('Erro ao carregar projeto!', 'error');
-          this.router.navigate(['/projects']);
-        }
-      });
-    }
-  }
+  // private loadProject(): void {
+  //   if (this.projectId) {
+  //     this.projectsService.getProject(this.projectId).subscribe({
+  //       next: (project) => {
+  //         this.populateForm(project);
+  //       },
+  //       error: (error) => {
+  //         console.error('Erro ao carregar projeto:', error);
+  //         this.showSnackBar('Erro ao carregar projeto!', 'error');
+  //         this.router.navigate(['/projects']);
+  //       }
+  //     });
+  //   }
+  // }
 
   private populateForm(project: Project): void {
     this.projectForm.patchValue({
@@ -171,9 +171,9 @@ export class ProjectFormComponent implements OnInit {
       const formData = this.prepareFormData();
 
       if (this.isEditMode && this.projectId) {
-        this.updateProject(formData);
+        // this.updateProject(formData);
       } else {
-        this.createProject(formData);
+        // this.createProject(formData);
       }
     } else {
       this.markFormGroupTouched();
@@ -204,37 +204,37 @@ export class ProjectFormComponent implements OnInit {
     return date;
   }
 
-  private createProject(projectData: Partial<Project>): void {
-    this.projectsService.createProject(projectData).subscribe({
-      next: (project) => {
-        this.isSubmitting = false;
-        this.showSnackBar('Projeto criado com sucesso!', 'success');
-        this.router.navigate(['/projects', project.id]);
-      },
-      error: (error) => {
-        this.isSubmitting = false;
-        console.error('Erro ao criar projeto:', error);
-        this.showSnackBar('Erro ao criar projeto!', 'error');
-      }
-    });
-  }
+  // private createProject(projectData: Partial<Project>): void {
+  //   this.projectsService.createProject(projectData).subscribe({
+  //     next: (project) => {
+  //       this.isSubmitting = false;
+  //       this.showSnackBar('Projeto criado com sucesso!', 'success');
+  //       this.router.navigate(['/projects', project.id]);
+  //     },
+  //     error: (error) => {
+  //       this.isSubmitting = false;
+  //       console.error('Erro ao criar projeto:', error);
+  //       this.showSnackBar('Erro ao criar projeto!', 'error');
+  //     }
+  //   });
+  // }
 
-  private updateProject(projectData: Partial<Project>): void {
-    if (this.projectId) {
-      this.projectsService.updateProject(this.projectId, projectData).subscribe({
-        next: (project) => {
-          this.isSubmitting = false;
-          this.showSnackBar('Projeto atualizado com sucesso!', 'success');
-          this.router.navigate(['/projects', project.id]);
-        },
-        error: (error) => {
-          this.isSubmitting = false;
-          console.error('Erro ao atualizar projeto:', error);
-          this.showSnackBar('Erro ao atualizar projeto!', 'error');
-        }
-      });
-    }
-  }
+  // private updateProject(projectData: Partial<Project>): void {
+  //   if (this.projectId) {
+  //     this.projectsService.updateProject(this.projectId, projectData).subscribe({
+  //       next: (project) => {
+  //         this.isSubmitting = false;
+  //         this.showSnackBar('Projeto atualizado com sucesso!', 'success');
+  //         this.router.navigate(['/projects', project.id]);
+  //       },
+  //       error: (error) => {
+  //         this.isSubmitting = false;
+  //         console.error('Erro ao atualizar projeto:', error);
+  //         this.showSnackBar('Erro ao atualizar projeto!', 'error');
+  //       }
+  //     });
+  //   }
+  // }
 
   private markFormGroupTouched(): void {
     Object.keys(this.projectForm.controls).forEach(key => {
