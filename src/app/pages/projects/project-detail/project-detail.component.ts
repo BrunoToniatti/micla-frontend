@@ -23,6 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Subject, takeUntil, forkJoin } from 'rxjs';
 
+
 import {
   ProjectsService,
   Project,
@@ -35,11 +36,7 @@ import {
   ProjectTag,
   User
 } from '../../../services/projects.service';
-
-import { AddTeamMemberDialogComponent, AddTeamMemberData } from './dialogs/add-team-member-dialog.component';
-import { AddTagDialogComponent, AddTagData } from './dialogs/add-tag-dialog.component';
-import { AddTaskDialogComponent, AddTaskData } from './dialogs/add-task-dialog.component';
-import { AddTimeEntryDialogComponent, AddTimeEntryData } from './dialogs/add-time-entry-dialog.component';
+import { AddTagDialogComponent } from "./dialogs/add-tag-dialog.component";
 
 @Component({
   selector: 'app-project-detail',
@@ -66,8 +63,9 @@ import { AddTimeEntryDialogComponent, AddTimeEntryData } from './dialogs/add-tim
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
-  ],
+    MatSnackBarModule,
+    AddTagDialogComponent
+],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
   animations: [
@@ -95,6 +93,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     progress: 0
   } as Project;
   tasks: Task[] = [];
+  showAddTagDialog = false;
   timeEntries: TimeEntry[] = [];
   attachments: ProjectAttachment[] = [];
   comments: ProjectComment[] = [];
@@ -104,7 +103,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   private destroy$ = new Subject<void>();
-  private projectId: number | null = null;
+  public projectId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -677,16 +676,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   // ===== GESTÃO DE TAGS =====
   onAddTag(): void {
+    this.showAddTagDialog = true;
     // Simular adição de tag hardcoded
-    const colors = ['#3f51b5', '#f44336', '#ff9800', '#4caf50', '#9c27b0', '#e91e63'];
-    const newTag = {
-      id: Date.now(),
-      name: 'Nova Tag',
-      color: colors[Math.floor(Math.random() * colors.length)]
-    };
-
-    this.project.tags = [...(this.project.tags || []), newTag];
-    this.showSnackBar('Tag adicionada com sucesso!', 'success');
   }
 
   onRemoveTag(tagId: number): void {

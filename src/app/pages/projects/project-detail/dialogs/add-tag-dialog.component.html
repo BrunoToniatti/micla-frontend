@@ -1,0 +1,110 @@
+<!-- Modal para Adicionar Tag -->
+<div class="add-tag-dialog-overlay" [@fadeIn]>
+  <div class="add-tag-dialog-container" [@slideIn]>
+    <div class="dialog-header">
+      <h2>
+        <mat-icon>local_offer</mat-icon>
+        Adicionar Nova Tag
+      </h2>
+      <button mat-icon-button class="close-button" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="dialog-content">
+      <form class="tag-form" (ngSubmit)="onSubmit()" #tagForm="ngForm">
+        <!-- Nome da Tag -->
+        <div class="form-group">
+          <label for="tagName">Nome da Tag</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Digite o nome da tag</mat-label>
+            <input
+              matInput
+              id="tagName"
+              name="tagName"
+              placeholder="Ex: Frontend, Bug, Urgente"
+              [(ngModel)]="tagName"
+              required
+              maxlength="50"
+              #tagNameInput="ngModel"
+            >
+            <mat-hint align="end">{{tagName?.length || 0}}/50</mat-hint>
+            <mat-error *ngIf="tagNameInput.invalid && tagNameInput.touched">
+              Nome da tag é obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Seletor de Cor -->
+        <div class="form-group">
+          <label>Cor da Tag</label>
+          <div class="color-picker-section">
+            <div class="color-preview" [style.background-color]="selectedColor">
+              <span class="preview-text">{{tagName || 'Preview'}}</span>
+            </div>
+
+            <div class="color-options">
+              <div class="color-grid">
+                <div
+                  *ngFor="let color of colorOptions"
+                  class="color-option"
+                  [class.selected]="selectedColor === color.value"
+                  [style.background-color]="color.value"
+                  [title]="color.name"
+                  (click)="selectColor(color.value)"
+                >
+                  <mat-icon *ngIf="selectedColor === color.value">check</mat-icon>
+                </div>
+              </div>
+
+              <!-- Seletor de Cor Personalizada -->
+              <div class="custom-color-section">
+                <label for="customColor">Cor personalizada:</label>
+                <input
+                  type="color"
+                  id="customColor"
+                  class="custom-color-input"
+                  [value]="selectedColor"
+                  (change)="onCustomColorChange($event)"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview da Tag -->
+        <div class="form-group">
+          <label>Preview</label>
+          <div class="tag-preview-container">
+            <div class="tag-preview" [style.background-color]="selectedColor">
+              <span>{{tagName || 'Nova Tag'}}</span>
+              <mat-icon class="preview-icon">close</mat-icon>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="cancel-button"
+        (click)="onCancel()"
+      >
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="add-button"
+        [disabled]="!tagName || tagName.trim().length === 0"
+        (click)="onSubmit()"
+      >
+        <mat-icon>add</mat-icon>
+        Adicionar Tag
+      </button>
+    </div>
+  </div>
+</div>

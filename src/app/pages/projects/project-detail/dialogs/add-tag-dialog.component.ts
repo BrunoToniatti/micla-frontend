@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -83,7 +83,25 @@ export interface AddTagData {
   `]
 })
 export class AddTagDialogComponent {
+  @Input() projectId: any = null;
   tagForm: FormGroup;
+  tagName: string = '';
+  selectedColor: string = '#3f51b5';
+
+  colorOptions = [
+    { name: 'Azul', value: '#3f51b5' },
+    { name: 'Verde', value: '#4caf50' },
+    { name: 'Vermelho', value: '#f44336' },
+    { name: 'Laranja', value: '#ff9800' },
+    { name: 'Roxo', value: '#9c27b0' },
+    { name: 'Teal', value: '#009688' },
+    { name: 'Indigo', value: '#3f51b5' },
+    { name: 'Rosa', value: '#e91e63' },
+    { name: 'Amarelo', value: '#ffeb3b' },
+    { name: 'Cinza', value: '#607d8b' },
+    { name: 'Marrom', value: '#795548' },
+    { name: 'Azul Claro', value: '#03a9f4' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -94,6 +112,24 @@ export class AddTagDialogComponent {
       name: ['', Validators.required],
       color: ['#3f51b5', Validators.required]
     });
+  }
+
+  selectColor(color: string): void {
+    this.selectedColor = color;
+  }
+
+  onCustomColorChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.selectedColor = target.value;
+  }
+
+  onSubmit(): void {
+    if (this.tagName && this.tagName.trim().length > 0) {
+      this.dialogRef.close({
+        name: this.tagName.trim(),
+        color: this.selectedColor
+      });
+    }
   }
 
   onCancel(): void {

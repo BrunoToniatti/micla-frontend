@@ -136,6 +136,9 @@ export class ProjectsService {
 
   constructor(private http: HttpClient) {}
 
+
+  // CRUD DE PROJETOS
+  // Métodos para gerenciar projetos
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.baseUrl}`);
   }
@@ -156,7 +159,20 @@ export class ProjectsService {
     return this.http.put<Project>(`${this.baseUrl}${projectId}/`, project);
   }
 
-  // Helper methods for UI
+  // CRUD DE TAGS DO PROJETO
+  getProjectTags(projectId: number): Observable<ProjectTag[]> {
+    return this.http.get<ProjectTag[]>(`${this.baseUrl}${projectId}/tags/`);
+  }
+
+  createProjectTag(projectId: number, tag: Partial<ProjectTag>): Observable<ProjectTag> {
+    return this.http.post<ProjectTag>(`${this.baseUrl}${projectId}/tags/`, tag);
+  }
+
+  deleteProjectTag(projectId: number, tagId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${projectId}/tags/${tagId}/`);
+  }
+
+  // Metodos para ajudar na UI design
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'active': return 'status-active';
