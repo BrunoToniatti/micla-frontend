@@ -36,7 +36,7 @@ import {
   ProjectTag,
   User
 } from '../../../services/projects.service';
-import { AddTagDialogComponent } from "./dialogs/add-tag-dialog.component";
+import { AddTagComponent } from './components/add-tag/add-tag.component';
 
 @Component({
   selector: 'app-project-detail',
@@ -64,7 +64,7 @@ import { AddTagDialogComponent } from "./dialogs/add-tag-dialog.component";
     MatNativeDateModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    AddTagDialogComponent
+    AddTagComponent
 ],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
@@ -674,22 +674,6 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ===== GESTÃO DE TAGS =====
-  onAddTag(): void {
-    this.showAddTagDialog = true;
-    // Simular adição de tag hardcoded
-  }
-
-  onRemoveTag(tagId: number): void {
-    if (!this.projectId) return;
-
-    if (confirm('Tem certeza que deseja remover esta tag?')) {
-      // Simular remoção hardcoded
-      this.project.tags = this.project.tags?.filter(t => t.id !== tagId);
-      this.showSnackBar('Tag removida com sucesso!', 'success');
-    }
-  }
-
   // ===== GESTÃO DE TAREFAS =====
   onAddTask(): void {
     // Simular adição de tarefa hardcoded
@@ -865,6 +849,42 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       // Simular exclusão hardcoded
       this.comments = this.comments.filter(c => c.id !== commentId);
       this.showSnackBar('Comentário excluído com sucesso!', 'success');
+    }
+  }
+
+  // ===== MÉTODOS DAS TAGS =====
+  onAddTag(): void {
+    this.showAddTagDialog = true;
+  }
+
+  onCloseAddTagDialog(): void {
+    this.showAddTagDialog = false;
+  }
+
+  onAddNewTag(tagData: {name: string, color: string}): void {
+    // Simular adição de tag sem conectar ao banco
+    const newTag = {
+      id: this.project.tags ? Math.max(...this.project.tags.map(t => t.id)) + 1 : 1,
+      name: tagData.name,
+      color: tagData.color
+    };
+
+    if (this.project.tags) {
+      this.project.tags.push(newTag);
+    } else {
+      this.project.tags = [newTag];
+    }
+
+    this.showAddTagDialog = false;
+    this.showSnackBar(`Tag "${tagData.name}" adicionada com sucesso!`, 'success');
+  }
+
+  onRemoveTag(tagId: number): void {
+    if (confirm('Tem certeza que deseja remover esta tag?')) {
+      if (this.project.tags) {
+        this.project.tags = this.project.tags.filter(tag => tag.id !== tagId);
+        this.showSnackBar('Tag removida com sucesso!', 'success');
+      }
     }
   }
 

@@ -94,6 +94,7 @@
             </button>
           </div>
         </div>
+
       </div>
 
       <div class="team-section">
@@ -382,9 +383,6 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-  @if(showAddTagDialog){
-  <app-add-tag-dialog></app-add-tag-dialog>
-  }
 
   <!-- Error State -->
   <div *ngIf="!isLoading && !project" class="empty-state">
@@ -395,4 +393,11 @@
       Voltar aos Projetos
     </button>
   </div>
+
+  <!-- Add Tag Dialog -->
+  <app-add-tag
+    *ngIf="showAddTagDialog"
+    (closeDialog)="onCloseAddTagDialog()"
+    (addTag)="onAddNewTag($event)">
+  </app-add-tag>
 </div>
