@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { Tag } from '../pages/projects/project-detail/components/tag-team/tag-team.service';
 
 // Interfaces
 export interface Project {
@@ -47,15 +48,6 @@ export interface User {
   last_name: string;
   full_name?: string;
 }
-
-export interface Tag {
-  id: number;
-  name: string;
-  color: string;
-  project?: number;
-}
-
-export interface ProjectTag extends Tag {}
 
 export interface Task {
   id: number;
@@ -157,19 +149,6 @@ export class ProjectsService {
 
   updateProject(projectId: number, project: Partial<Project>): Observable<Project> {
     return this.http.put<Project>(`${this.baseUrl}${projectId}/`, project);
-  }
-
-  // CRUD DE TAGS DO PROJETO
-  getProjectTags(projectId: number): Observable<ProjectTag[]> {
-    return this.http.get<ProjectTag[]>(`${this.baseUrl}${projectId}/tags/`);
-  }
-
-  createProjectTag(projectId: number, tag: Partial<ProjectTag>): Observable<ProjectTag> {
-    return this.http.post<ProjectTag>(`${this.baseUrl}${projectId}/tags/`, tag);
-  }
-
-  deleteProjectTag(projectId: number, tagId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}${projectId}/tags/${tagId}/`);
   }
 
   // Metodos para ajudar na UI design

@@ -10,8 +10,8 @@
         class="form-input"
         placeholder="Digite o nome da tag..."
         maxlength="50"
-        [(ngModel)]="tagName"
-        (keyup.enter)="onAddTag()"
+        [(ngModel)]="newTag.name"
+        (keyup.enter)="onAddTag(projectId)"
       >
     </div>
 
@@ -22,18 +22,18 @@
           type="color"
           id="tagColor"
           class="color-picker"
-          [(ngModel)]="tagColor"
+          [(ngModel)]="newTag.color"
           (change)="onColorChange($event)"
         >
         <div class="color-preview">
-          <span class="tag-preview" [style.background-color]="tagColor">{{tagName || 'Preview'}}</span>
+          <span class="tag-preview" [style.background-color]="newTag.color">{{newTag.name || 'Preview'}}</span>
         </div>
       </div>
     </div>
 
     <div class="form-actions">
       <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancelar</button>
-      <button type="button" class="btn btn-primary" (click)="onAddTag()" [disabled]="!tagName.trim()">Adicionar Tag</button>
+      <button type="button" class="btn btn-primary" (click)="onAddTag(this.projectId)" [disabled]="!newTag.name.trim()">Adicionar Tag</button>
     </div>
   </div>
 </div>
