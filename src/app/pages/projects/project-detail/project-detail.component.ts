@@ -37,6 +37,7 @@ import {
   User
 } from '../../../services/projects.service';
 import { AddTagComponent } from './components/add-tag/add-tag.component';
+import { TagTeamComponent } from "./components/tag-team/tag-team.component";
 
 @Component({
   selector: 'app-project-detail',
@@ -64,7 +65,7 @@ import { AddTagComponent } from './components/add-tag/add-tag.component';
     MatNativeDateModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    AddTagComponent
+    TagTeamComponent
 ],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
@@ -125,6 +126,10 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onProjectChange(updatedProject: Project): void {
+    this.project = updatedProject;
   }
 
   getProjectById(id: number){
@@ -642,37 +647,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ===== GESTÃO DE MEMBROS DA EQUIPE =====
-  onAddTeamMember(): void {
-    // Simular adição de membro hardcoded
-    const newMember = {
-      id: Date.now(),
-      user: {
-        id: Date.now(),
-        username: 'novo_usuario',
-        first_name: 'Novo',
-        last_name: 'Usuário',
-        email: 'novo@example.com',
-        full_name: 'Novo Usuário'
-      },
-      role: 'developer',
-      role_display: 'Desenvolvedor',
-      joined_at: new Date().toISOString()
-    };
 
-    this.project.members = [...(this.project.members || []), newMember];
-    this.showSnackBar('Membro adicionado à equipe com sucesso!', 'success');
-  }
-
-  onRemoveTeamMember(memberId: number): void {
-    if (!this.projectId) return;
-
-    if (confirm('Tem certeza que deseja remover este membro da equipe?')) {
-      // Simular remoção hardcoded
-      this.project.members = this.project.members?.filter(m => m.id !== memberId);
-      this.showSnackBar('Membro removido da equipe com sucesso!', 'success');
-    }
-  }
 
   // ===== GESTÃO DE TAREFAS =====
   onAddTask(): void {

@@ -75,52 +75,7 @@
     </div>
 
     <!-- Tags e Equipe -->
-    <div class="project-overview" [@fadeIn]>
-      <div class="tags-section">
-        <div class="section-header">
-          <h3>
-            <mat-icon>local_offer</mat-icon>
-            Tags
-          </h3>
-          <button mat-mini-fab color="primary" (click)="onAddTag()" title="Adicionar tag">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <div class="tags-container">
-          <div class="tag-chip" *ngFor="let tag of project.tags" [style.background-color]="tag.color">
-            <span>{{tag.name}}</span>
-            <button mat-icon-button class="remove-tag" (click)="onRemoveTag(tag.id)" title="Remover tag">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="team-section">
-        <div class="section-header">
-          <h3>
-            <mat-icon>group</mat-icon>
-            Equipe
-          </h3>
-          <button mat-mini-fab color="primary" (click)="onAddTeamMember()" title="Adicionar membro">
-            <mat-icon>person_add</mat-icon>
-          </button>
-        </div>
-        <div class="team-avatars">
-          <div class="team-member" *ngFor="let member of project.members"
-            [title]="member.user.full_name + ' - ' + member.role_display">
-            <div class="member-info">
-              <div class="avatar">{{member.user.first_name.charAt(0)}}{{member.user.last_name.charAt(0)}}</div>
-              <span class="member-name">{{member.user.full_name}}</span>
-            </div>
-            <button mat-button class="remove-member" (click)="onRemoveTeamMember(member.id)" title="Remover membro">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-tag-team [project]="project" (projectChange)="onProjectChange($event)"></app-tag-team>
 
     <!-- Tabs com conteúdo -->
     <mat-tab-group class="content-tabs" [@fadeIn]>
@@ -393,11 +348,4 @@
       Voltar aos Projetos
     </button>
   </div>
-
-  <!-- Add Tag Dialog -->
-  <app-add-tag
-    *ngIf="showAddTagDialog"
-    (closeDialog)="onCloseAddTagDialog()"
-    (addTag)="onAddNewTag($event)">
-  </app-add-tag>
 </div>
